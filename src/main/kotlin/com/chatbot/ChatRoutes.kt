@@ -14,7 +14,8 @@ fun Routing.chatRoutes() {
     post("/chat") {
         val jsonBody = call.receiveText()
         val message = extractMessageField(jsonBody)
-        val reply = HuggingFaceClient.getModelResponse(message)
+        //val FlanT5Reply = FlanT5.getModelResponse(message)
+        val Llama7bReply = Llama7b.getModelResponse(message)
         call.respondText("""{"reply":"$reply"}""", ContentType.Application.Json)
     }
 }
