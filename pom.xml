@@ -66,7 +66,7 @@
     <!-- Ktor Content Negotiation for Kotlinx -->
     <dependency>
       <groupId>io.ktor</groupId>
-      <artifactId>ktor-client-content-negotiation-jvm</artifactId>
+      <artifactId>ktor-server-content-negotiation-jvm</artifactId>
       <version>${ktor.version}</version>
     </dependency>
 
@@ -98,16 +98,11 @@
       <version>2.3.1</version>
     </dependency>
 
+    <!-- Kotlin StdLib -->
     <dependency>
-      <groupId>com.squareup.moshi</groupId>
-      <artifactId>moshi</artifactId>
-      <version>1.15.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.squareup.moshi</groupId>
-      <artifactId>moshi-kotlin</artifactId>
-      <version>1.15.0</version>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jdk8</artifactId>
+      <version>${kotlin.version}</version>
     </dependency>
 
 <!--  serialization-->
@@ -144,6 +139,13 @@
       <artifactId>ktor-server-default-headers-jvm</artifactId>
       <version>${ktor.version}</version>
     </dependency>
+
+    <!-- CORS Plugin -->
+    <dependency>
+      <groupId>io.ktor</groupId>
+      <artifactId>ktor-server-cors-jvm</artifactId>
+      <version>${ktor.version}</version>
+    </dependency>
   </dependencies>
 
 
@@ -152,6 +154,16 @@
     <sourceDirectory>src/main/kotlin</sourceDirectory>
 
     <plugins>
+
+      <!-- Exec Plugin to run Main.kt -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <mainClass>com.chatbot.MainKt</mainClass> <!-- Fixed package path -->
+        </configuration>
+      </plugin>
 
       <!-- Update your kotlin-maven-plugin configuration -->
       <plugin>
@@ -165,9 +177,6 @@
             <goals>
               <goal>compile</goal>
             </goals>
-            <configuration>
-
-            </configuration>
           </execution>
           <execution>
             <id>test-compile</id>
@@ -177,27 +186,20 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <compilerPlugins>
+            <plugin>kotlinx-serialization</plugin>
+          </compilerPlugins>
+        </configuration>
         <dependencies>
           <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-maven-serialization</artifactId>
             <version>${kotlin.version}</version>
           </dependency>
-
         </dependencies>
-
-
       </plugin>
 
-      <!-- Exec Plugin to run Main.kt -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <configuration>
-          <mainClass>com.chatbot.MainKt</mainClass> <!-- Fixed package path -->
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 </project>

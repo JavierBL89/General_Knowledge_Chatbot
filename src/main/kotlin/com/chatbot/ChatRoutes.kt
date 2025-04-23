@@ -12,16 +12,23 @@ import io.ktor.server.routing.*
 // call.respond ---> function in Ktor that is used to send a response back to the client.
 fun Routing.chatRoutes() {
     post("/chat") {
+
         val jsonBody = call.receiveText()
+
         val message = extractMessageField(jsonBody)
-        //val FlanT5Reply = FlanT5.getModelResponse(message)
-        val Llama7bReply = Llama7b.getModelResponse(message)
-        call.respondText("""{"reply":"$reply"}""", ContentType.Application.Json)
+
+        val zephyr7b = Zephyr7b()
+        val zephyrReply = zephyr7b.getModelResponse(message)
+
+        call.respond(
+            mapOf("reply" to zephyrReply)
+        )
+
+        //call.respondText("""{"reply":"$zephyrReply"}""", ContentType.Application.Json)
     }
 }
 
 fun extractMessageField(json: String): String {
-    // Naive extractor for {"message":"..."}
     return Regex("""\"message\"\s*:\s*\"([^\"]+)\"""")
         .find(json)
         ?.groupValues?.get(1)

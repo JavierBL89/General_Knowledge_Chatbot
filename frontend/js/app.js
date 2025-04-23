@@ -10,15 +10,17 @@ form.addEventListener('submit', async (e) => {
   input.value = '';
 
   try {
-    const response = await fetch('http://localhost:8080/chat', {
+    const response = await fetch('/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message }),
     });
 
     const data = await response.json();
+    console.log("🌐 API reply:", data);
     displayMessage(data.reply, 'bot');
   } catch (err) {
+    console.error("❌ Error talking to server:", err);
     displayMessage('Error: Could not connect to server.', 'bot');
   }
 });
