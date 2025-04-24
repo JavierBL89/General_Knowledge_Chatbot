@@ -19,15 +19,38 @@ fun Routing.chatRoutes() {
 
         val zephyr7b = Zephyr7b()
         val zephyrReply = zephyr7b.getModelResponse(message)
-
+        val formattedModelResponse = formatModelResponse(zephyrReply)
         call.respond(
-            mapOf("reply" to zephyrReply)
+            mapOf("reply" to formattedModelResponse)
         )
 
         //call.respondText("""{"reply":"$zephyrReply"}""", ContentType.Application.Json)
     }
 }
 
+/***
+ * Function to format the model response
+ * @param zephyrReply The response from the model
+ * @return The formatted response
+ */
+fun formatModelResponse(zephyrReply: String): String {
+
+    val botReply = zephyrReply.substringAfter("Bot:").trim()
+
+    return if ("Bot:" in zephyrReply) {
+        botReply
+    } else {
+        zephyrReply.trim() // fallback to raw response if format wasn't followed
+    }
+}
+
+
+
+/**
+ * Function to extract the message field from the JSON string
+ * @param json The JSON string
+ * @return The extracted message field or "Hi" if not found
+ */
 fun extractMessageField(json: String): String {
     return Regex("""\"message\"\s*:\s*\"([^\"]+)\"""")
         .find(json)

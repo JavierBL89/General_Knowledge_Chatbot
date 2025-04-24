@@ -17,10 +17,20 @@ class Zephyr7b {
      * Function to format the user input into a prompt for the model
      * **/
     private fun formatPrompt(userInput: String): String {
-        return "Answer concisely and factually. Only respond as the bot.\n\nUser: $userInput\nBot:"
-    }
+        return """
+        You are a helpful assistant. Respond clearly, factually, and only answer the question below without repeating it.
+        User: $userInput
+        Bot:
+    """.trimIndent()
+
+   }
 
 
+
+
+    /**
+     * Function responsible for making the API call to the model
+     * **/
      fun getModelResponse(input: String): String {
 
         val customMessage = "🤖 Sorry, the AI model is temporarily unavailable. Try again in a moment!"
