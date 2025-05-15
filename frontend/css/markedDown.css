@@ -1,0 +1,16 @@
+.bot ul {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.bot li {
+  margin-bottom: 5px;
+}
+
+.bot strong {
+  font-weight: bold;
+}
+
+.bot em {
+  font-style: italic;
+}

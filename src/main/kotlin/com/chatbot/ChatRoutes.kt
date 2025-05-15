@@ -6,24 +6,35 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
+@kotlinx.serialization.Serializable
+data class ChatRequest(val message: String)
+
 
 // call.receive ---> function in Ktor that is used to receive and deserialize the body of an incoming HTTP request.
 //                   It reads the request body and converts it into the specified type.
 // call.respond ---> function in Ktor that is used to send a response back to the client.
 fun Routing.chatRoutes() {
     post("/chat") {
+        try {
 
-        val jsonBody = call.receiveText()
+            // Automatically parse the incoming JSON to ChatRequest
+            val body = call.receive<ChatRequest>()
+            val message = body.message
 
-        val message = extractMessageField(jsonBody)
+            val zephyr7bBeta = Zephyr7bBeta()
+            val zephyr7bBetaReply = zephyr7bBeta.getModelResponseFromHFSpace(message)
+            val formattedModelResponse = formatModelResponse(zephyr7bBetaReply)
+            // Format the model response
+            val finalFormattedReply = zephyr7bBeta.responseFormatWithLines(formattedModelResponse)
 
-        val zephyr7b = Zephyr7b()
-        val zephyrReply = zephyr7b.getModelResponse(message)
-        val formattedModelResponse = formatModelResponse(zephyrReply)
-        call.respond(
-            mapOf("reply" to formattedModelResponse)
-        )
+            call.respond(
+                mapOf("reply" to finalFormattedReply)
+            )
 
+        } catch (e: Exception) {
+            println("❌ Server Error: ${e.message}")
+            call.respond(HttpStatusCode.InternalServerError, mapOf("reply" to "Error: Could not connect to server."))
+        }
         //call.respondText("""{"reply":"$zephyrReply"}""", ContentType.Application.Json)
     }
 }
@@ -33,14 +44,14 @@ fun Routing.chatRoutes() {
  * @param zephyrReply The response from the model
  * @return The formatted response
  */
-fun formatModelResponse(zephyrReply: String): String {
+fun formatModelResponse(zephy7bReply: String): String {
 
-    val botReply = zephyrReply.substringAfter("Bot:").trim()
+    val botReply = zephy7bReply.substringAfter("Bot:").trim()
 
-    return if ("Bot:" in zephyrReply) {
+    return if ("Bot:" in zephy7bReply) {
         botReply
     } else {
-        zephyrReply.trim() // fallback to raw response if format wasn't followed
+        zephy7bReply.trim() // fallback to raw response if format wasn't followed
     }
 }
 
