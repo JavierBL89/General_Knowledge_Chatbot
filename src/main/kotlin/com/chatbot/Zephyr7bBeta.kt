@@ -3,10 +3,13 @@ package com.chatbot
 
 import com.github.kittinunf.fuel.Fuel
 import io.github.cdimascio.dotenv.dotenv
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
+import kotlin.math.pow
 
+import java.sql.Time
 
 
 @Serializable
@@ -24,21 +27,18 @@ class Zephyr7bBeta {
     private val dotenv = dotenv()
     private val HF_TOKEN = dotenv["HF_API_KEY_TOKEN"] // Make sure this exists in your .env
 
-
     /**
      * Function to format the user input into a prompt for the model
      * **/
     private fun formatPrompt(userInput: String): String {
-
         val formattedInput = """
                     User query: $userInput.
-                    Instructions:  Format your answer in Markdown using numbered lists, bullet points and bold titles when needed to the user query. Instructions End.
+                    Instructions:  Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) when needed to the user query. Instructions End.
                     """.trimIndent()
 
         val jsonBody = buildJsonObject {
             put("inputs", formattedInput)
         }
-
         return jsonBody.toString()
    }
 
@@ -74,28 +74,26 @@ class Zephyr7bBeta {
      }
 
 
-
     /**
      * Function responsible for making the API call to the model
      * **/
-     fun getModelResponseFromHFSpace(input: String): String {
-
+    fun getModelResponseFromHFSpace(input: String): String {
         val customMessage = "🤖 Sorry, the AI model is unavailable. Try again in a moment!"
         HF_TOKEN ?: return "❌ No HF token found."
 
-        val api_url = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
+        val api_url = " https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
         val formattedInput = formatPrompt(input)
 
-
-
-        var maxAttemps = 3
-        val retryDelayMillis = 2000
+        var maxAttemps = 1
+        val retryDelayMillis = 2000L
         // Retry logic when connection timeout accurs
         while (maxAttemps > 0) {
             try {
                 val (_, response, result) = Fuel.post(api_url)
                     .header("Authorization", "Bearer $HF_TOKEN")
                     .header("Content-Type", "application/json")
+                    .timeout(15000) // set timeout 15s
+                    .timeoutRead(15000)
                     .body(formattedInput.toString())
                     .responseString()
 
@@ -110,12 +108,15 @@ class Zephyr7bBeta {
                 return result.fold(
                     success = { body ->
                         try {
-                            val replyList = Json.decodeFromString<List<PromptResponse>>(body)
-                            val reply = replyList.firstOrNull()?.generated_text ?: "❌ No response."
-                            val cleanedReply = cleanZephyrResponse(reply)
-                            return cleanedReply
-                           // return responseFormatWithLines(cleanedReply)
-
+                            val parsedJson = Json.parseToJsonElement(body)
+                            if (parsedJson is JsonArray && parsedJson.isNotEmpty()) {
+                                val reply = parsedJson[0].jsonObject["generated_text"]?.jsonPrimitive?.content
+                                if (reply != null) {
+                                    val cleanedReply = cleanZephyrResponse(reply)
+                                    return cleanedReply
+                                }
+                            }
+                            return "⚠️ Unexpected response format from Zephyr: $body"
                         } catch (e: Exception) {
                             return ("❌ Deserialization error: ${e.message}")
                         }
@@ -124,27 +125,50 @@ class Zephyr7bBeta {
                         return ("❌ HF Space error: ${error.message}")
                     }
                 )
+
             }catch (e: Exception) {
-                if (e.message == "Read timed out") {
-                    println("Connection Timeout")
-                    println("Attempting to reconnect...")
+                if (e.message?.contains("Read timed out", ignoreCase = true) == true) {
                     maxAttemps--
-                    Thread.sleep(700)
-
+                    val backoffDelay = retryDelayMillis * (2.0.pow((2 - maxAttemps).toDouble())).toLong()
+                    println("Connection Timeout. Retrying in ${backoffDelay}ms... ($maxAttemps attempts left)")
+                    Thread.sleep(backoffDelay)
+                } else {
+                    return "❌ Unhandled exception: ${e.message}"
                 }
-
                 println("❌ FULL ERROR: ${e.message}")
                 e.printStackTrace() // <--- add this
             }
 
         }
-        // ⛔ Zephyr failed — Fallback to FlanT5
-        println("⚠️ Falling back to FlanT5 model after Zephyr failed.")
 
-//        val flanFallback = FlanT5_FallBackModel()
-//        return flanFallback.callFlanT5(formattedInput)
-        return customMessage
+        println("⚠️ Zephyr failed after retries. Falling back to Mistral7B.")
+        println("⚠ Initiating request in 5 seconds...")
+        Thread.sleep(5000)
+        try {
+            return runMistral7BInIsolatedThread(input)
+        } catch (e: Exception) {
+            println("❌ Mistral7B fallback failed: ${e.message}")
+            return customMessage
+        }
     }
+}
+
+
+fun runMistral7BInIsolatedThread(input: String): String {
+    val resultHolder = arrayOfNulls<String>(1)
+    val thread = Thread {
+        try {
+            println("Launching Mistral7B fallback...")
+            resultHolder[0] = Mistral7bFallBackModelHFAPI().callMistral7b(input)
+        } catch (e: Exception) {
+            println("❌ Mistral7B isolated thread failed: ${e.message}")
+            e.printStackTrace()
+            resultHolder[0] = "❌ Mistral7B fallback failed: ${e.message}"
+        }
+    }
+    thread.start()
+    thread.join(30000) // wait max 30s
+    return resultHolder[0] ?: "❌ Mistral7B did not respond in time."
 }
 
 

@@ -5,7 +5,7 @@ body {
   padding: 0;
   display: flex;
   height: 100vh;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
 }
 
@@ -19,7 +19,7 @@ body {
 }
 
 #chatbox {
-  height: 300px;
+  height: 75vh;
   overflow-y: auto;
   margin-bottom: 10px;
   padding: 10px;
@@ -33,11 +33,17 @@ body {
 .user {
   text-align: right;
   color: blue;
+  font-size: 0.9em;
 }
 
 .bot {
   text-align: left;
   color: black;
+  font-size: 0.9em;
+}
+
+.bot p {
+  margin: 5px auto;
 }
 
 form {

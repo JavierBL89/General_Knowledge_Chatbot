@@ -49,7 +49,7 @@ form.addEventListener('submit', async (e) => {
           timeoutMessageDiv = document.createElement('div');
           timeoutMessageDiv.className = 'bot';
           timeoutMessageDiv.id = 'timeout-hint';
-          timeoutMessageDiv.textContent = "⏳ This is taking longer... server might be busy.";
+          timeoutMessageDiv.textContent = "⏳ This is taking longer... Zephyr7b server might be busy.";
           chatbox.appendChild(timeoutMessageDiv);
           chatbox.scrollTop = chatbox.scrollHeight;
           timeoutMessageShown = true;
