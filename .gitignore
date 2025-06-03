@@ -39,4 +39,4 @@ build/
 
 ### Env ###
 .env
-venv/
+venv/venv/
