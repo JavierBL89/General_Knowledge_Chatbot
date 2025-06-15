@@ -1,1 +1,41 @@
 # GitHub Actions workflow
+
+name: Run Promptfoo Evaluations
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run-evals:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install promptfoo CLI
+        run: npm install -g promptfoo
+
+      - name: Run promptfoo_mixed_tests.yaml
+        run: promptfoo eval -c .github/workflows/promptfoo_mixed_tests.yaml
+
+      - name: Run promptfoo_relevance_or_sanity_tests.yaml
+        run: promptfoo eval -c .github/workflows/promptfoo_relevance_or_sanity_tests.yaml
+
+      - name: Run promptfoo_ROUGE_tests.yaml
+        run: promptfoo eval -c .github/workflows/promptfoo_ROUGE_tests.yaml
+
+      - name: Run promptfoo_semantic_scoring_tests.yaml
+        run: promptfoo eval -c .github/workflows/promptfoo_semantic_scoring_tests.yaml
+    env:
+      HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+      HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
