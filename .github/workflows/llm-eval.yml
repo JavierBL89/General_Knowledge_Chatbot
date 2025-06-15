@@ -15,8 +15,8 @@ jobs:
       HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
       HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-    steps:
 
+    steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -34,12 +34,26 @@ jobs:
 
       - name: Run promptfoo_mixed_tests.yaml
         run: promptfoo eval -c .github/promptfoo_mixed_tests.yaml
+        env:
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Run promptfoo_relevance_or_sanity_tests.yaml
         run: promptfoo eval -c .github/promptfoo_relevance_or_sanity_tests.yaml
-
+        env:
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       - name: Run promptfoo_ROUGE_tests.yaml
         run: promptfoo eval -c .github/promptfoo_ROUGE_tests.yaml
-
+        env:
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       - name: Run promptfoo_semantic_scoring_tests.yaml
         run: promptfoo eval -c .github/promptfoo_semantic_scoring_tests.yaml
+        env:
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
