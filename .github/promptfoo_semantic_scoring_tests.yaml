@@ -1,0 +1,117 @@
+
+
+# Description:
+
+# This Promptfoo configuration defines sanity-check style evaluations for Zephyr-7B and Mistral-7B models
+# using Hugging Face inference endpoints. It validates whether model responses are semantically accurate,
+# on-topic, and structurally appropriate using `embeddingSimilarity` metrics. These lightweight tests help
+# detect regressions or hallucinations when updating prompts or switching models. Useful for knowledge-base bots,
+# marketing content generation, or FAQ assistants expected to return structured Markdown output.
+
+
+providers:
+  - id: http
+    label: Zephyr-7B
+    config:
+      url: "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer $HF_API_KEY_TOKEN"
+      body:
+        inputs: | # Use the oficial chat format
+          <|system|>
+           Instructions: You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) to answer the user query.
+          <|user|>
+          {{question}}
+          <|assistant|>
+        options:
+          wait_for_model: true  # Forces the API to wait until the model loads
+          parameters:
+            max_new_tokens: 128 # Adjust the number of tokens as needed
+            stop_sequences: [ "<|user|>" ]   # secondary safety net
+      transformResponse: "json[0].generated_text"
+
+  - id: http
+    label: Mistral-7B
+    config:
+      url: "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer $HF_API_MISTRAL_KEY_TOKEN"
+      body:
+        inputs: |
+          <s>[INST] <<SYS>>
+          You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) to answer the user query.
+          <</SYS>>
+          {{question}}
+          [ /INST ]
+        options:
+          wait_for_model: true  # Forces the API to wait until the model loads
+          parameters:
+            max_new_tokens: 128 # Adjust the number of tokens as needed
+            stop_sequences: [ "</s>", "[/INST]" ]   # safety net
+      transformResponse: "json[0].generated_text"
+
+tests:
+  - description: "Check AI explanation"
+    vars:
+      question: What is AI?
+    minScore: 0.5 # set a threshold for the test(matching words) to pass
+    expected: |
+      Artificial Intelligence is a field focused on creating systems that can perform tasks such as learning, reasoning, problem-solving, and understanding natural language. It often involves neural networks and algorithms trained on data.
+    evals:
+      - type: embeddingSimilarity
+        threshold: 0.75   # You can tune this — 0.75+ is usually good
+
+
+
+  - description: "Check benefits of a healthy diet"
+    vars:
+      question: What are 3 benefits of a healthy diet?
+      minScore: 0.5
+      expected: |
+        A healthy diet provides several important benefits:
+
+        1. **Weight Management**: Eating balanced, nutritious foods helps maintain a healthy weight and prevents obesity.
+        2. **Increased Energy**: A diet rich in essential nutrients supports sustained energy levels throughout the day.
+        3. **Disease Prevention**: A healthy diet can reduce the risk of chronic diseases such as heart disease, diabetes, and certain cancers.
+      evals:
+        - type: embeddingSimilarity
+          threshold: 0.75   # You can tune this — 0.75+ is usually good
+
+
+  - description: "Check personal benefits of a romantic relationship"
+    vars:
+      question: What are the personal benefits of having a romantic relationship?
+      minScore: 0.5
+      expected: |
+        Personal benefits of having a romantic relationship include:
+
+        1. **Emotional Support**: Partners provide emotional comfort and help manage stress and life challenges.
+        2. **Increased Self-Esteem**: Positive reinforcement from a loving partner can enhance self-confidence and well-being.
+        3. **Companionship**: Having a partner offers a sense of belonging and reduces feelings of loneliness.
+        4. **Opportunities for Personal Growth**: Relationships encourage personal development, communication skills, and empathy.
+        5. **Improved Mental Health**: Supportive relationships are linked to better mental health outcomes and life satisfaction.
+      evals:
+        - type: embeddingSimilarity
+          threshold: 0.75   # You can tune this — 0.75+ is usually good
+
+
+  - description: "Check the downsides of a romantic relationship"
+    vars:
+      question: What are the downsides of having a romantic relationship?
+      minScore: 0.5
+      expected: |
+        Downsides of having a romantic relationship can include:
+
+        1. **Conflict and Arguments**: Disagreements and misunderstandings can lead to stress and emotional discomfort.
+        2. **Jealousy and Insecurity**: Romantic relationships can sometimes foster feelings of jealousy or low self-esteem.
+        3. **Emotional Dependency**: Over-reliance on a partner can hinder personal independence.
+        4. **Heartbreak**: The end of a relationship can result in emotional pain and distress.
+        5. **Stress**: Maintaining a relationship requires effort and commitment, which can sometimes be a source of stress.
+      evals:
+        - type: embeddingSimilarity
+          threshold: 0.75   # You can tune this — 0.75+ is usually good
+

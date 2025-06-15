@@ -1,0 +1,118 @@
+
+# Description:
+
+# This Promptfoo test suite compares the responses of Zephyr-7B and Mistral-7B models using ROUGE-N (unigram overlap)
+# to validate surface-level similarity and keyword coverage. It is designed for lightweight quality checks on structured
+# prompts requiring Markdown formatting. Each test ensures that core concepts are present in the output without evaluating deep semantics.
+# Ideal for early prompt iterations, template-style outputs, and verifying that essential terms or phrasing are included.
+
+providers:
+  - id: http
+    label: Zephyr-7B
+    config:
+      url: "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer $HF_API_KEY_TOKEN"
+      body:
+        inputs: | # Use the oficial chat format
+          <|system|>
+           Instructions: You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) to answer the user query.
+          <|user|>
+          {{question}}
+          <|assistant|>
+        options:
+          wait_for_model: true  # Forces the API to wait until the model loads
+          parameters:
+            max_new_tokens: 170 # Adjust the number of tokens as needed
+            stop_sequences: [ "<|user|>" ]   # secondary safety net
+      transformResponse: "json[0].generated_text"
+
+  - id: http
+    label: Mistral-7B
+    config:
+      url: "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer $HF_API_MISTRAL_KEY_TOKEN"
+      body:
+        inputs: |
+          <s>[INST] <<SYS>>
+          You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) to answer the user query.
+          <</SYS>>
+          {{question}}
+          [ /INST ]
+        options:
+          wait_for_model: true  # Forces the API to wait until the model loads
+          parameters:
+            max_new_tokens: 170 # Adjust the number of tokens as needed
+            stop_sequences: [ "</s>", "[/INST]" ]   # safety net
+      transformResponse: "json[0].generated_text"
+
+tests:
+  - description: "Check benefits of a healthy diet"
+    vars:
+        question: "List 3 benefits of a healthy diet."
+    providers:
+    - huggingface:text-generation:HuggingFaceH4/zephyr-7b-beta
+    - huggingface:text-generation:mistralai/Mistral-7B-Instruct-v0.3
+    assert:
+      - type: rouge-n
+        n: 1  # Unigram overlap
+        threshold: 0.5
+        value: |
+          improves physical and mental health
+          energy levels
+          reduces risk of heart disease
+          risk of certain cancers
+
+  - description: "Check personal benefits of a romantic relationship"
+    vars:
+        question: "What are the personal benefits of having a romantic relationship?"
+    providers:
+      - huggingface:text-generation:HuggingFaceH4/zephyr-7b-beta
+      - huggingface:text-generation:mistralai/Mistral-7B-Instruct-v0.3
+    assert:
+      - type: rouge-n
+        n: 1  # Unigram overlap
+        threshold: 0.5
+        value:
+          Growth 
+          companionship
+          emotional connection
+          emotional support
+
+  - description: "Check the downsides of a romantic relationship"
+    vars:
+        question: "What are the downsides of having a romantic relationship?"
+    providers:
+      - huggingface:text-generation:HuggingFaceH4/zephyr-7b-beta
+      - huggingface:text-generation:mistralai/Mistral-7B-Instruct-v0.3
+    assert:
+      - type: rouge-n
+        n: 1  # Unigram overlap
+        threshold: 0.5
+        value:
+          emotional pain
+          commitment
+          conflict
+          Loss
+          jealousy
+          expectations
+
+  - description: "Check a short poem about the ocean"
+    vars:
+        question: "Write a short poem about the ocean."
+    providers:
+      - huggingface:text-generation:HuggingFaceH4/zephyr-7b-beta
+      - huggingface:text-generation:mistralai/Mistral-7B-Instruct-v0.3
+    assert:
+      - type: rouge-n
+        n: 1  # Unigram overlap
+        threshold: 0.2
+        value: |
+          The ocean's waves, a rhythmic dance,
+          A vast expanse, a timeless trance.
+          Beneath the surface, secrets lie,

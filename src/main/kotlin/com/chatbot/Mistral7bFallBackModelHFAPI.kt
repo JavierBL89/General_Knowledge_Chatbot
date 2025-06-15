@@ -75,12 +75,15 @@ class Mistral7bFallBackModelHFAPI {
     private fun buildPrompt(userInput: String): String {
         val prompt = """
         ### Instruction:
-        You are a helpful assistant. Your task is to provide a structured, high-quality answer to the following user query.
-
-        - **Always** use Markdown formatting where appropriate (headings, lists, bold, italics, links, code).
-        - Keep the tone **concise**, **professional**, and **easy to read**.
-        - Do **not repeat the question**.
-        - Avoid vague filler phrases like "it's a good idea" or "you may find that...".
+        You are a helpful assistant. Your task is to provide a structured, high-quality answer to the user query following these guidelines:
+        
+        1. **Structure** your response with clear sections, using headings, lists, bold, italics, links, code and bullet points where appropriate.
+        2. Start with a clear introduction of what your response is about
+        3. Keep the tone **concise**, **professional**, and **easy to read**.
+        4. Do **not repeat the question**.
+        5. Avoid vague filler phrases like "it's a good idea" or "you may find that...".
+        6. End with a short summary or conclusion if appropriate.
+        7. Always provide a **farewell** text at the end of your response, such as "Feel free to ask if you have more questions!".
         
         
         ### User Query:

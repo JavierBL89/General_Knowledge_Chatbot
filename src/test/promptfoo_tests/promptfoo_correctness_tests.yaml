@@ -1,0 +1,67 @@
+####  Relevance   #####  Key concept coverage tests   ####
+####  Coverage / completeness ####  Key concept coverage tests   ####
+
+
+providers:
+  - id: huggingface:text-generation:HuggingFaceH4/zephyr-7b-beta
+    config:
+      hf_token: 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
+      temperature: 0.7
+
+  - id: huggingface:text-generation:mistralai/Mistral-7B-Instruct-v0.3
+    config:
+      hf_token: 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
+      temperature: 0.7
+
+tests:
+  - description: "What is AI?"
+    prompt: "What is AI?"
+    assert:
+      - type: contains
+        value: "algorithms"
+      - type: contains
+        value: "learning"
+      - type: contains
+        value: "neural networks"
+      - type: contains
+        value: "data"
+
+  - description: "What are 3 benefits of a healthy diet?"
+    prompt: "What are 3 benefits of a healthy diet?"
+    assert:
+      - type: contains
+        value: "weight"
+      - type: contains
+        value: "energy"
+      - type: contains
+        value: "disease"
+
+  - description: "What are the personal benefits of having a romantic relationship?"
+    prompt: "What are the personal benefits of having a romantic relationship?"
+    assert:
+      - type: contains
+        value: "companionship"
+      - type: contains
+        value: "emotional support"
+      - type: contains
+        value: "support"
+      - type: contains
+        value: "stress"
+      - type: contains
+        value: "well-being"
+
+  - description: "What are the downsides of having a romantic relationship?"
+    prompt: "What are the downsides of having a romantic relationship?"
+    assert:
+      - type: contains
+        value: "conflict"
+      - type: contains
+        value: "stress"
+      - type: contains
+        value: "jealousy"
+      - type: contains
+        value: "heartbreak"
+      - type: contains
+        value: "dependency"
+      - type: contains
+        value: "arguments"

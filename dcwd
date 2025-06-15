@@ -1,0 +1,95 @@
+defaultTest:
+  vars:
+    template: |
+      Instructions: Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) when needed to the user query. Instructions End.
+      User query: {{question}}
+
+providers:
+  - id: http
+    config:
+      url: "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
+      headers:
+        Authorization: "Bearer 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"
+      body:
+        inputs: "{{inputs}}"
+      outputExtractor: |
+        console.log("DEBUG RESPONSE:", JSON.stringify(response));
+        if (Array.isArray(response) && response[0]?.generated_text) {
+        return response[0].generated_text;
+        }
+        return "";
+
+  - id: http
+    config:
+      url: "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
+      headers:
+        Authorization: "Bearer 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"
+      body:
+        inputs: "{{inputs}}"
+      outputExtractor: |
+        console.log("DEBUG RESPONSE:", JSON.stringify(response));
+        if (Array.isArray(response) && response[0]?.generated_text) {
+        return response[0].generated_text;
+        }
+        return "";
+
+tests:
+  - description: "What is AI?"
+    vars:
+      question: "What is AI?"
+      inputs: "{{template}}"
+    assert:
+      - type: contains
+        value: "algorithms"
+      - type: contains
+        value: "learning"
+      - type: contains
+        value: "neural networks"
+      - type: contains
+        value: "data"
+
+  - description: "Benefits of a healthy diet"
+    vars:
+      question: "What are 3 benefits of a healthy diet?"
+      inputs: "{{template}}"
+    assert:
+      - type: contains
+        value: "weight"
+      - type: contains
+        value: "energy"
+      - type: contains
+        value: "disease"
+
+  - description: "Personal benefits of a romantic relationship"
+    vars:
+      question: "What are the personal benefits of having a romantic relationship?"
+      inputs: "{{template}}"
+    assert:
+      - type: contains
+        value: "companionship"
+      - type: contains
+        value: "emotional support"
+      - type: contains
+        value: "support"
+      - type: contains
+        value: "stress"
+      - type: contains
+        value: "well-being"
+
+  - description: "Downsides of a romantic relationship"
+    vars:
+      question: "What are the downsides of having a romantic relationship?"
+      inputs: "{{template}}"
+    assert:
+      - type: contains
+        value: "conflict"
+      - type: contains
+        value: "stress"
+      - type: contains
+        value: "jealousy"
+      - type: contains
+        value: "heartbreak"
+      - type: contains
+        value: "dependency"
+      - type: contains
+        value: "arguments"

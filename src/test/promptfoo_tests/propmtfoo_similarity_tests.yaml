@@ -1,0 +1,55 @@
+prompts:
+  - "List 3 benefits of a healthy diet."
+  - "What are the personal benefits of having a romantic relationship?"
+  - "What are the downsides of having a romantic relationship?"
+  - "Explain the difference between supervised and unsupervised learning."
+  - "Write a short poem about the ocean."
+
+providers:
+  - id: huggingface:text-generation:HuggingFaceH4/zephyr-7b-beta
+    config:
+      hf_token: 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
+
+  - id: huggingface:text-generation:mistralai/Mistral-7B-Instruct-v0.3
+    config:
+      hf_token: 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
+
+
+tests:
+  - description: "Check benefits of a healthy diet"
+    prompt: "List 3 benefits of a healthy diet."
+    providers: [huggingface:text-generation:HuggingFaceH4/zephyr-7b-beta]
+    assert:
+      - type: contains
+        value: [ "weight", "energy", "disease" ]
+
+
+  - description: "Check personal benefits of a romantic relationship"
+    prompt: "What are the personal benefits of having a romantic relationship?"
+    providers:
+      - huggingface:text-generation:HuggingFaceH4/zephyr-7b-beta
+      - huggingface:text-generation:mistralai/Mistral-7B-Instruct-v0.3
+    assert:
+      - type: similarity
+        threshold: 0.7
+        expected: |
+          1. growth and support
+          2. emotional connection
+
+  - description: "Check the downsides of a romantic relationship"
+    prompt: "What are the downsides of having a romantic relationship?"
+    providers:
+      - huggingface:text-generation:HuggingFaceH4/zephyr-7b-beta
+      - huggingface:text-generation:mistralai/Mistral-7B-Instruct-v0.3
+    assert:
+      - type: similar
+        threshold: 0.7 # cosine similarity
+
+  - description: "Check a short poem about the ocean"
+    prompt: "Write a short poem about the ocean."
+    providers:
+      - huggingface:text-generation:HuggingFaceH4/zephyr-7b-beta
+      - huggingface:text-generation:mistralai/Mistral-7B-Instruct-v0.3
+    assert:
+      - type: similar
+        threshold: 0.7  # cosine similarity

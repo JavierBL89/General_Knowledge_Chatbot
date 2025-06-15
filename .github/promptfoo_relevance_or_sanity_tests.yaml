@@ -1,0 +1,107 @@
+### Fit-for-purpose: "sanity checks" / shallow validation
+
+
+# Description:
+
+# This Promptfoo test suite performs shallow validation ("sanity checks") for Zephyr-7B and Mistral-7B models.
+# It uses `icontains-any` assertions to ensure that the generated responses mention at least some of the expected key terms.
+# This approach is useful for verifying basic topical relevance, avoiding hallucinations, and catching regressions early.
+# Ideal for early prompt iterations or lightweight QA where deep semantic evaluation is not required.
+
+
+providers:
+  - id: http
+    label: Zephyr-7B
+    config:
+      url: "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer $HF_API_KEY_TOKEN"
+      body:
+        inputs: | # Use the oficial chat format
+          <|system|>
+           Instructions: You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) to answer the user query.
+          <|user|>
+          {{question}}
+          <|assistant|>
+        options:
+          wait_for_model: true  # Forces the API to wait until the model loads
+          parameters:
+            max_new_tokens: 256 # Adjust the number of tokens as needed
+            stop_sequences: [ "<|user|>" ]   # secondary safety net
+      transformResponse: "json[0].generated_text"
+
+  - id: http
+    label: Mistral-7B
+    config:
+      url: "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer $HF_API_MISTRAL_KEY_TOKEN"
+      body:
+        inputs: |
+          <s>[INST] <<SYS>>
+          You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) to answer the user query.
+          <</SYS>>
+          {{question}}
+          [ /INST ]
+        options:
+          wait_for_model: true  # Forces the API to wait until the model loads
+          parameters:
+            max_new_tokens: 256 # Adjust the number of tokens as needed
+            stop_sequences: [ "</s>", "[/INST]" ]   # safety net
+      transformResponse: "json[0].generated_text"
+
+tests:
+  - description: "Check AI explanation"
+    vars:
+      question: What is AI?
+    minScore: 0.5 # set a threshold for the test(matching words) to pass
+    assert:
+      - type: icontains-any
+        value:
+            - "algorithms"
+            - "learning"
+            - "networks"
+            - "data"
+
+
+  - description: "Check benefits of a healthy diet"
+    vars:
+      question: What are 3 benefits of a healthy diet?
+      minScore: 0.5
+    assert:
+      - type: icontains-any
+        value:
+            - "weight"
+            - "energy"
+            - "disease"
+
+  - description: "Check personal benefits of a romantic relationship"
+    vars:
+      question: What are the personal benefits of having a romantic relationship?
+      minScore: 0.5
+    assert:
+      - type: icontains-any
+        value:
+            - "companionship"
+            - "emotional support"
+            - "support"
+            - "stress"
+            - "well-being"
+
+  - description: "Check the downsides of a romantic relationship"
+    vars:
+      question: What are the downsides of having a romantic relationship?
+      minScore: 0.5
+    assert:
+      - type: icontains-any
+        value:
+            - "conflict"
+            - "stress"
+            - "jealousy"
+            - "heartbreak"
+            - "dependency"
+            - "arguments"

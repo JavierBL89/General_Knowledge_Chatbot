@@ -32,8 +32,18 @@ class Zephyr7bBeta {
      * **/
     private fun formatPrompt(userInput: String): String {
         val formattedInput = """
+                    Instructions:                
+                    You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) when appropiate.
+                    1. Start with a clear introduction of what your response is about
+                    2. Keep the tone **concise**, **professional**, and **easy to read**.
+                    3. Do **not repeat the question**.
+                    4. Avoid vague filler phrases like "it's a good idea" or "you may find that...".
+                    5. End with a short summary or conclusion if appropriate.
+                    6. Always provide a **farewell** text at the end of your response, such as "Feel free to ask if you have more questions!".
+                    Instructions End.
+                     
                     User query: $userInput.
-                    Instructions:  Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) when needed to the user query. Instructions End.
+                    Answer:
                     """.trimIndent()
 
         val jsonBody = buildJsonObject {
@@ -81,7 +91,7 @@ class Zephyr7bBeta {
         val customMessage = "🤖 Sorry, the AI model is unavailable. Try again in a moment!"
         HF_TOKEN ?: return "❌ No HF token found."
 
-        val api_url = " https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
+        val api_url = "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
         val formattedInput = formatPrompt(input)
 
         var maxAttemps = 1

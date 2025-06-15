@@ -1,0 +1,145 @@
+### Fit-for-purpose: "sanity checks" / shallow validation
+
+### Purpose: Shallow Validation for Prompt and Model Effectiveness
+
+## This test suite performs fast, low-effort checks to validate:
+## 1. On-topic relevance:
+##    - Does the output mention expected key concepts?
+##    - Is it avoiding hallucinations and staying aligned with the query?
+##
+## 2. Regression detection:
+##    - Prompt updates: Are important elements still present?
+##    - Model swaps: Has behavior subtly shifted or degraded?
+##
+## 3. Early feedback for iteration:
+##    - During prototyping, keyword + similarity checks are efficient indicators of success.
+
+## Especially useful for:
+## - Internal knowledge bots ("What are our company values?")
+## - Marketing prompt generation ("Describe our flagship AI product.")
+## - Support/FAQ summarization tools
+
+# Format enforced: Markdown (headings, lists, bold, italics, links, code)
+# Eval strategies: icontains-any, ROUGE-N, embedding similarity, latency
+
+prompts:
+  - id: 'Prompt #1'
+    raw: |
+      Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) when needed to the user query. Instructions End.
+      User query: {{question}}
+
+providers:
+  - id: http
+    label: Zephyr-7B
+    config:
+      url: "https://api-inference.huggingface.co/models/HuggingFaceH4/zephyr-7b-beta"
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer $HF_API_KEY_TOKEN"
+      body:
+        inputs: | # Use the oficial chat format
+          <|system|>
+           Instructions: You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) to answer the user query.
+          <|user|>
+          {{question}}
+          <|assistant|>
+        options:
+          wait_for_model: true  # Forces the API to wait until the model loads
+          parameters:
+            max_new_tokens: 256 # Adjust the number of tokens as needed
+            stop_sequences: [ "<|user|>" ]   # secondary safety net
+      transformResponse: "json[0].generated_text"
+
+  - id: http
+    label: Mistral-7B
+    config:
+      url: "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3"
+      method: POST
+      headers:
+        Content-Type: application/json
+        Authorization: "Bearer $HF_API_MISTRAL_KEY_TOKEN"
+      body:
+        inputs: |
+          <s>[INST] <<SYS>>
+          You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) to answer the user query.
+          <</SYS>>
+          {{question}}
+          [ /INST ]
+        options:
+          wait_for_model: true  # Forces the API to wait until the model loads
+          parameters:
+            max_new_tokens: 256 # Adjust the number of tokens as needed
+            stop_sequences: [ "</s>", "[/INST]" ]   # safety net
+      transformResponse: "json[0].generated_text"
+
+tests:
+  - description: "Check AI explanation"
+    vars:
+      question: What is AI?
+    assert:
+      - type: icontains-any
+        value:
+          - "algorithms"
+          - "learning"
+          - "networks"
+          - "data"
+      # ✅ Recall of core concepts (ROUGE-1 ≥ 0.75) Exact matching n-grams (unigrams, bigrams, etc.) between system output and reference
+      - type: rouge-n
+        n: 1
+        threshold: 0.40
+        value: |
+          Artificial Intelligence (AI) refers to the development of computer systems and programs that can perform tasks that normally require human intelligence, 
+          such as learning, reasoning, and decision-making. 
+          AI applications include speech and image recognition, natural language processing, and autonomous robots. 
+          AI has the potential to transform various industries, including healthcare, finance, transportation, and manufacturing, by improving efficiency, accuracy, 
+          and safety. However, there are also concerns about the impact of AI on employment, privacy, and safety due to its increasing use in decision-making processes.
+      # latency check
+      - type: latency
+        threshold: 1000 # mili-seconds
+      # similarity check
+      - type: similar
+        embedding:
+          id: azureopenai:embedding:text-embedding-ada-002
+          config:
+            apiHost: xxx.openai.azure.com
+        threshold: 0.60
+        value: |
+           Artificial Intelligence (AI) refers to the development of computer systems and programs that can perform tasks that normally require human intelligence, 
+           such as learning, reasoning, and decision-making. 
+           AI applications include speech and image recognition, natural language processing, and autonomous robots. 
+           AI has the potential to transform various industries, including healthcare, finance, transportation, and manufacturing, by improving efficiency, accuracy, 
+           and safety. However, there are also concerns about the impact of AI on employment, privacy, and safety due to its increasing use in decision-making processes.
+
+  - description: "Check benefits of a healthy diet"
+    vars:
+      question: What are 3 benefits of a healthy diet?
+    assert:
+      - type: icontains-any
+        value:
+          - "weight"
+          - "energy"
+          - "disease"
+      # ✅ Recall of core concepts (ROUGE-1 ≥ 0.75) Exact matching n-grams (unigrams, bigrams, etc.) between system output and reference
+      - type: rouge-n
+        n: 1
+        threshold: 0.40
+        value: |
+          1. Prevents chronic diseases: A healthy diet that is rich in fruits, vegetables, whole grains, and lean proteins can significantly reduce the risk of chronic diseases such as heart disease, diabetes, and certain types of cancer.
+          2. Promotes weight management: A balanced diet that is low in saturated fats, sugars, and salt can help individuals maintain a healthy weight, which is crucial for overall health and wellbeing.
+          3. Enhances energy and mental clarity: Eating a diet that is high in fiber, vitamins, and minerals can provide sustained energy throughout the day, as well as improved mental clarity and focus.
+      # latency check
+      - type: latency
+        threshold: 1000 # mili-seconds
+      # similarity check
+      - type: similar
+        embedding:
+          id: azureopenai:embedding:text-embedding-ada-002
+          config:
+            apiHost: xxx.openai.azure.com
+        threshold: 0.60
+        value: |
+          1. Prevents chronic diseases: A healthy diet that is rich in fruits, vegetables, whole grains, and lean proteins can significantly reduce the risk of chronic diseases such as heart disease, diabetes, and certain types of cancer.
+          2. Promotes weight management: A balanced diet that is low in saturated fats, sugars, and salt can help individuals maintain a healthy weight, which is crucial for overall health and wellbeing.
+          3. Enhances energy and mental clarity: Eating a diet that is high in fiber, vitamins, and minerals can provide sustained energy throughout the day, as well as improved mental clarity and focus.
+
