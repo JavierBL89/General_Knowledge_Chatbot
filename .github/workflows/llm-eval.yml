@@ -11,8 +11,12 @@ on:
 jobs:
   run-evals:
     runs-on: ubuntu-latest
-
+    env:
+      HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+      HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -20,7 +24,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-
+      - name: Debug - Check ENV is loaded
+        run: env | grep HF_API_KEY_TOKEN
       - name: Install promptfoo CLI
         run: npm install -g promptfoo
 
@@ -35,7 +40,3 @@ jobs:
 
       - name: Run promptfoo_semantic_scoring_tests.yaml
         run: promptfoo eval -c .github/promptfoo_semantic_scoring_tests.yaml
-    env:
-      HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
-      HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
