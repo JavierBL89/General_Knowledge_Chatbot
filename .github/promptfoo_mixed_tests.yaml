@@ -29,7 +29,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer ${{HF_API_KEY_TOKEN}}"
+        Authorization: "Bearer $HF_API_KEY_TOKEN"
       body:
         inputs: | # Use the oficial chat format
           <|system|>
@@ -51,7 +51,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer ${{HF_API_MISTRAL_KEY_TOKEN}}"
+        Authorization: "Bearer $HF_API_MISTRAL_KEY_TOKEN"
       body:
         inputs: |
           <s>[INST] <<SYS>>

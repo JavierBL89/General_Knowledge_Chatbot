@@ -17,7 +17,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer ${{HF_API_KEY_TOKEN}}"
+        Authorization: "Bearer $HF_API_KEY_TOKEN"
       body:
         inputs: | # Use the oficial chat format
           <|system|>
