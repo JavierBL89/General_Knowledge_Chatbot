@@ -21,13 +21,6 @@
 
 # Format enforced: Markdown (headings, lists, bold, italics, links, code)
 # Eval strategies: icontains-any, ROUGE-N, embedding similarity, latency
-
-prompts:
-  - id: 'Prompt #1'
-    raw: |
-      Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) when needed to the user query. Instructions End.
-      User query: {{question}}
-
 providers:
   - id: http
     label: Zephyr-7B
@@ -36,7 +29,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer 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"
+        Authorization: "Bearer ${HF_API_KEY_TOKEN}"
       body:
         inputs: | # Use the oficial chat format
           <|system|>
@@ -58,7 +51,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer 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"
+        Authorization: "Bearer ${HF_API_MISTRAL_KEY_TOKEN}"
       body:
         inputs: |
           <s>[INST] <<SYS>>

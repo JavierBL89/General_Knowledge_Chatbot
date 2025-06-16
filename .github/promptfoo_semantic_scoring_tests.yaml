@@ -17,7 +17,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer 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"
+        Authorization: "Bearer ${HF_API_KEY_TOKEN}"
       body:
         inputs: | # Use the oficial chat format
           <|system|>
@@ -39,7 +39,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer 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"
+        Authorization: "Bearer ${HF_API_MISTRAL_KEY_TOKEN}"
       body:
         inputs: |
           <s>[INST] <<SYS>>
@@ -53,6 +53,7 @@ providers:
             max_new_tokens: 128 # Adjust the number of tokens as needed
             stop_sequences: [ "</s>", "[/INST]" ]   # safety net
       transformResponse: "json[0].generated_text"
+
 
 tests:
   - description: "Check AI explanation"
