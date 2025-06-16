@@ -8,15 +8,24 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  checks: read
+
 jobs:
   run-evals:
     runs-on: ubuntu-latest
-    env:
-      HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
-      HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
+      # This cache is optional, but you'll save money and time by setting it up!
+      - name: Set up promptfoo cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/promptfoo
+          key: ${{ runner.os }}-promptfoo-v1
+          restore-keys: |
+            ${{ runner.os }}-promptfoo-
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -34,12 +43,28 @@ jobs:
 
       - name: Run promptfoo_mixed_tests.yaml
         run: promptfoo eval -c .github/promptfoo_mixed_tests.yaml
+        with:
+            HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+            HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Run promptfoo_relevance_or_sanity_tests.yaml
         run: promptfoo eval -c .github/promptfoo_relevance_or_sanity_tests.yaml
+        with:
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Run promptfoo_ROUGE_tests.yaml
         run: promptfoo eval -c .github/promptfoo_ROUGE_tests.yaml
+        with:
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Run promptfoo_semantic_scoring_tests.yaml
         run: promptfoo eval -c .github/promptfoo_semantic_scoring_tests.yaml
+        with:
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
