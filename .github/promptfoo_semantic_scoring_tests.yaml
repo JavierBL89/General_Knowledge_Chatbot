@@ -8,6 +8,7 @@
 # detect regressions or hallucinations when updating prompts or switching models. Useful for knowledge-base bots,
 # marketing content generation, or FAQ assistants expected to return structured Markdown output.
 
+
 providers:
   - id: http
     label: Zephyr-7B
@@ -16,7 +17,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer ${{ env.HF_API_KEY_TOKEN }}"
+        Authorization: "Bearer $HF_API_KEY_TOKEN"
       body:
         inputs: | # Use the oficial chat format
           <|system|>
@@ -38,7 +39,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer ${{ env.HF_API_MISTRAL_KEY_TOKEN }}"
+        Authorization: "Bearer $HF_API_MISTRAL_KEY_TOKEN"
       body:
         inputs: |
           <s>[INST] <<SYS>>
@@ -52,7 +53,6 @@ providers:
             max_new_tokens: 128 # Adjust the number of tokens as needed
             stop_sequences: [ "</s>", "[/INST]" ]   # safety net
       transformResponse: "json[0].generated_text"
-
 
 
 tests:
