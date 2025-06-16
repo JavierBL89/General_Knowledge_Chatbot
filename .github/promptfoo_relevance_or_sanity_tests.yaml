@@ -9,6 +9,7 @@
 # Ideal for early prompt iterations or lightweight QA where deep semantic evaluation is not required.
 
 
+
 providers:
   - id: http
     label: Zephyr-7B
@@ -17,7 +18,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer ${env('HF_API_KEY_TOKEN')}"
+        Authorization: "Bearer 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"
       body:
         inputs: | # Use the oficial chat format
           <|system|>
@@ -28,7 +29,7 @@ providers:
         options:
           wait_for_model: true  # Forces the API to wait until the model loads
           parameters:
-            max_new_tokens: 256 # Adjust the number of tokens as needed
+            max_new_tokens: 128 # Adjust the number of tokens as needed
             stop_sequences: [ "<|user|>" ]   # secondary safety net
       transformResponse: "json[0].generated_text"
 
@@ -39,7 +40,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer ${env('HF_API_MISTRAL_KEY_TOKEN')}"
+        Authorization: "Bearer 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"
       body:
         inputs: |
           <s>[INST] <<SYS>>
@@ -50,7 +51,7 @@ providers:
         options:
           wait_for_model: true  # Forces the API to wait until the model loads
           parameters:
-            max_new_tokens: 256 # Adjust the number of tokens as needed
+            max_new_tokens: 128 # Adjust the number of tokens as needed
             stop_sequences: [ "</s>", "[/INST]" ]   # safety net
       transformResponse: "json[0].generated_text"
 
