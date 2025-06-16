@@ -15,7 +15,7 @@ permissions:
 jobs:
   run-evals:
     runs-on: ubuntu-latest
-    with:
+    env:
       HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
       HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
