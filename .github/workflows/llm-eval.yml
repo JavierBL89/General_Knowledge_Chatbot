@@ -21,14 +21,6 @@ jobs:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
-      # This cache is optional, but you'll save money and time by setting it up!
-      - name: Set up promptfoo cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/promptfoo
-          key: ${{ runner.os }}-promptfoo-v1
-          restore-keys: |
-            ${{ runner.os }}-promptfoo-
 
       - name: Checkout repository
         uses: actions/checkout@v3
