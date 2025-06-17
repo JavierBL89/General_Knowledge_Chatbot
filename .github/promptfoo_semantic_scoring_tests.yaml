@@ -1,5 +1,14 @@
 
 
+# Description:
+
+# This Promptfoo configuration defines sanity-check style evaluations for Zephyr-7B and Mistral-7B models
+# using Hugging Face inference endpoints. It validates whether model responses are semantically accurate,
+# on-topic, and structurally appropriate using `embeddingSimilarity` metrics. These lightweight tests help
+# detect regressions or hallucinations when updating prompts or switching models. Useful for knowledge-base bots,
+# marketing content generation, or FAQ assistants expected to return structured Markdown output.
+
+
 providers:
   - id: http
     label: Zephyr-7B
@@ -8,7 +17,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer ${{ secrets.HF_API_KEY_TOKEN}}"
+        Authorization: "Bearer $HF_API_KEY_TOKEN"
       body:
         inputs: | # Use the oficial chat format
           <|system|>
@@ -30,7 +39,22 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}"
+        Authorization: "Bearer $HF_API_MISTRAL_KEY_TOKEN"
+      body:
+        inputs: |
+          <s>[INST] <<SYS>>
+          You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) to answer the user query.
+          <</SYS>>
+          {{question}}
+          [ /INST ]
+        options:
+          wait_for_model: true  # Forces the API to wait until the model loads
+          parameters:
+            max_new_tokens: 128 # Adjust the number of tokens as needed
+            stop_sequences: [ "</s>", "[/INST]" ]   # safety net
+      transformResponse: "json[0].generated_text"
+
+
 tests:
   - description: "Check AI explanation"
     vars:
