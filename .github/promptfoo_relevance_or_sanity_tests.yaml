@@ -7,8 +7,6 @@
 # It uses `icontains-any` assertions to ensure that the generated responses mention at least some of the expected key terms.
 # This approach is useful for verifying basic topical relevance, avoiding hallucinations, and catching regressions early.
 # Ideal for early prompt iterations or lightweight QA where deep semantic evaluation is not required.
-
-
 providers:
   - id: http
     label: Zephyr-7B
@@ -17,7 +15,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer $HF_API_KEY_TOKEN"
+        Authorization: "Bearer ${HF_API_KEY_TOKEN}"
       body:
         inputs: | # Use the oficial chat format
           <|system|>
@@ -39,7 +37,7 @@ providers:
       method: POST
       headers:
         Content-Type: application/json
-        Authorization: "Bearer ${{HF_API_MISTRAL_KEY_TOKEN}}"
+        Authorization: "Bearer ${HF_API_MISTRAL_KEY_TOKEN}"
       body:
         inputs: |
           <s>[INST] <<SYS>>
@@ -53,7 +51,6 @@ providers:
             max_new_tokens: 128 # Adjust the number of tokens as needed
             stop_sequences: [ "</s>", "[/INST]" ]   # safety net
       transformResponse: "json[0].generated_text"
-
 
 tests:
   - description: "Check AI explanation"
