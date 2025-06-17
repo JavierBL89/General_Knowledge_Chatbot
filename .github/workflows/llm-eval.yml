@@ -16,13 +16,6 @@ jobs:
   run-evals:
     runs-on: ubuntu-latest
     environment: github-actions
-    env:
-      GIT_HUB_ACTIONS_TOKEN: ${{ secrets.GIT_HUB_ACTIONS_TOKEN }}
-      HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
-      HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
-
     steps:
 
       - name: Checkout repository
@@ -39,17 +32,37 @@ jobs:
 
       - name: Install promptfoo CLI
         run: npm install -g promptfoo
-
+        env:
+          GIT_HUB_ACTIONS_TOKEN: ${{ secrets.GIT_HUB_ACTIONS_TOKEN }}
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       - name: Run promptfoo_mixed_tests.yaml
         run: promptfoo eval -c .github/promptfoo_mixed_tests.yaml
-
+        env:
+          GIT_HUB_ACTIONS_TOKEN: ${{ secrets.GIT_HUB_ACTIONS_TOKEN }}
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       - name: Run promptfoo_relevance_or_sanity_tests.yaml
         run: promptfoo eval -c .github/promptfoo_relevance_or_sanity_tests.yaml
-
+        env:
+          GIT_HUB_ACTIONS_TOKEN: ${{ secrets.GIT_HUB_ACTIONS_TOKEN }}
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       - name: Run promptfoo_ROUGE_tests.yaml
         run: promptfoo eval -c .github/promptfoo_ROUGE_tests.yaml
-
+        env:
+          GIT_HUB_ACTIONS_TOKEN: ${{ secrets.GIT_HUB_ACTIONS_TOKEN }}
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Run promptfoo_semantic_scoring_tests.yaml
         run: promptfoo eval -c .github/promptfoo_semantic_scoring_tests.yaml
-
+        env:
+          GIT_HUB_ACTIONS_TOKEN: ${{ secrets.GIT_HUB_ACTIONS_TOKEN }}
+          HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
+          HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
