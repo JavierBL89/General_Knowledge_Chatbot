@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: github-actions
     env:
-      GIT_HUB_ACTIONS_TOKEN: ${{ secrets.GIT_HUB_ACTIONS_TOKEN }}
+      GIT_HUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
       HF_API_KEY_TOKEN: ${{ secrets.HF_API_KEY_TOKEN }}
       HF_API_MISTRAL_KEY_TOKEN: ${{ secrets.HF_API_MISTRAL_KEY_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
