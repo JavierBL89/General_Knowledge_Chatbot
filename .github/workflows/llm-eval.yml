@@ -26,29 +26,42 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v3
-
+        env:
+          GIT_HUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
       - name: Set up Node.js
         uses: actions/setup-node@v3
+        env:
+          GIT_HUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
         with:
           node-version: '18'
       - name: Debug - Check ENV is loaded
+        env:
+          GIT_HUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
         run: |
           echo "HF_API_KEY_TOKEN length: ${#HF_API_KEY_TOKEN}"
           echo "HF_API_MISTRAL_KEY_TOKEN length: ${#HF_API_MISTRAL_KEY_TOKEN}"
 
       - name: Install promptfoo CLI
         run: npm install -g promptfoo
+        env:
+          GIT_HUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
 
       - name: Run promptfoo_mixed_tests.yaml
         run: promptfoo eval -c .github/promptfoo_mixed_tests.yaml
+        env:
+          GIT_HUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
 
       - name: Run promptfoo_relevance_or_sanity_tests.yaml
         run: promptfoo eval -c .github/promptfoo_relevance_or_sanity_tests.yaml
-
+        env:
+          GIT_HUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
       - name: Run promptfoo_ROUGE_tests.yaml
         run: promptfoo eval -c .github/promptfoo_ROUGE_tests.yaml
-
+        env:
+          GIT_HUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
 
       - name: Run promptfoo_semantic_scoring_tests.yaml
         run: promptfoo eval -c .github/promptfoo_semantic_scoring_tests.yaml
+        env:
+          GIT_HUB_TOKEN: ${{ secrets.GIT_HUB_TOKEN }}
 
