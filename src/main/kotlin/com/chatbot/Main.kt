@@ -9,10 +9,9 @@ import io.ktor.server.routing.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.cors.routing.CORS
-// import io.ktor.server.plugins.cors.routing.CORSConfig
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.*         // ✅ to support JSON
-import kotlinx.serialization.json.Json              // ✅ JSON config
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 
 
 import java.io.File

@@ -1,22 +1,10 @@
 package com.chatbot
 
-
 import com.github.kittinunf.fuel.Fuel
 import io.github.cdimascio.dotenv.dotenv
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 import kotlin.math.pow
-
-import java.sql.Time
-
-
-@Serializable
-data class PromptInput(val inputs: String)
-
-@Serializable
-data class PromptResponse(val generated_text: String)
 
 
 /**
@@ -187,8 +175,3 @@ fun runMistral7BInIsolatedThread(input: String): String {
     thread.join(30000) // wait max 30s
     return resultHolder[0] ?: "❌ Mistral7B did not respond in time."
 }
-
-
-//DeepSeek API (main): Payment is required for using the DeepSeek API, with costs determined by the number of input and output tokens.
-//DeepSeek-R1 on OpenRouter: You can access DeepSeek-R1 with a free API key on OpenRouter.
-//DeepSeek-R1 on Azure: DeepSeek-R1 endpoints are also available for free on Azure.
