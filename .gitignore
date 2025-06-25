@@ -41,3 +41,6 @@ build/
 .env
 venv/venv/
 node_modules/
+
+
+json_files/reportData.json

@@ -197,7 +197,7 @@ function showEvalReportModal() {
 
 async function loadEvaluationReport() {
   try {
-    const res = await fetch('/reportData.json');
+    const res = await fetch('/api/report-data');
     if (!res.ok) throw new Error("Report not found");
     dynamicReport = await res.json();
     console.log("✅ Evaluation report loaded");
