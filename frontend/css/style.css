@@ -9,6 +9,37 @@ body {
   align-items: center;
 }
 
+#main_wrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  }
+
+#bot-showcase{
+width: 90%;
+max-width: 600px;
+padding: 20px;
+border: 2px solid red;
+background-color: #fefefe;
+font-family: sans-serif;
+font-size: 16px;
+letter-spacing: 0.7px;
+}
+
+
+#bot-showcase {
+width: 90%;
+max-width: 600px;
+padding: 20px;
+border: 2px solid red;
+background-color: #fefefe;
+font-family: sans-serif;
+font-size: 16px;
+letters-spacing: 0.9px;
+}
+
 .chat-container {
   background: white;
   padding: 20px;
@@ -33,13 +64,13 @@ body {
 .user {
   text-align: right;
   color: blue;
-  font-size: 0.9em;
+  font-size: 1.1em;
 }
 
 .bot {
   text-align: left;
   color: black;
-  font-size: 0.9em;
+  font-size: 1.1em;
 }
 
 .bot p {
@@ -50,11 +81,14 @@ form {
   display: flex;
 }
 
-input {
+#user-input {
   flex: 1;
   padding: 10px;
+  padding-top: 17px;
   border: 1px solid #ccc;
   border-radius: 5px 0 0 5px;
+  line-height: 1.5;
+  font-size: 15px;
 }
 
 button {

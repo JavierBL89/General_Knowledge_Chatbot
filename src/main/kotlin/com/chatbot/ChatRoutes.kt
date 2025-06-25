@@ -5,6 +5,9 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import utils.PromptTestBridge
+import java.io.File
+
 
 @kotlinx.serialization.Serializable
 data class ChatRequest(val message: String)
@@ -21,21 +24,42 @@ fun Routing.chatRoutes() {
             val body = call.receive<ChatRequest>()
             val message = body.message
 
+
             val zephyr7bBeta = Zephyr7bBeta()
             val zephyr7bBetaReply = zephyr7bBeta.getModelResponseFromHFSpace(message)
             val formattedModelResponse = formatModelResponse(zephyr7bBetaReply)
             // Format the model response
             val finalFormattedReply = zephyr7bBeta.responseFormatWithLines(formattedModelResponse)
 
-            call.respond(
-                mapOf("reply" to finalFormattedReply)
+            val evaluator = PromptTestBridge()
+            val evalResultCode = evaluator.testUserInput(message, formattedModelResponse)
+            val evaluationPassed = (evalResultCode == 0)
+
+            val response = ChatResponse(
+                reply = finalFormattedReply,
+                evalGenerated = evaluationPassed
             )
+
+            call.respond(response)
 
         } catch (e: Exception) {
             println("❌ Server Error: ${e.message}")
             call.respond(HttpStatusCode.InternalServerError, mapOf("reply" to "Error: Could not connect to server."))
         }
         //call.respondText("""{"reply":"$zephyrReply"}""", ContentType.Application.Json)
+    }
+
+}
+
+
+fun Route.reportDataRoute() {
+    get("/api/report-data") {
+        try {
+            val fileContent = File("reportData.json").readText(Charsets.UTF_8)
+            call.respondText(fileContent, ContentType.Application.Json)
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, "Failed to read report data: ${e.message}")
+        }
     }
 }
 
@@ -68,3 +92,12 @@ fun extractMessageField(json: String): String {
         ?.groupValues?.get(1)
         ?: "Hi"
 }
+
+
+@kotlinx.serialization.Serializable
+data class ChatResponse(
+    val reply: String,
+    val evalGenerated: Boolean
+)
+
+

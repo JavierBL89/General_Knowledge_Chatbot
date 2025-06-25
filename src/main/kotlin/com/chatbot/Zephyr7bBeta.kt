@@ -32,19 +32,21 @@ class Zephyr7bBeta {
      * **/
     private fun formatPrompt(userInput: String): String {
         val formattedInput = """
-                    Instructions:                
-                    You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code) when appropiate.
-                    1. Start with a clear introduction of what your response is about
-                    2. Keep the tone **concise**, **professional**, and **easy to read**.
-                    3. Do **not repeat the question**.
-                    4. Avoid vague filler phrases like "it's a good idea" or "you may find that...".
-                    5. End with a short summary or conclusion if appropriate.
-                    6. Always provide a **farewell** text at the end of your response, such as "Feel free to ask if you have more questions!".
-                    Instructions End.
-                     
-                    User query: $userInput.
-                    Answer:
-                    """.trimIndent()
+            <|system|>
+            You are a concise assistant. Use Markdown formatting where appropriate (headings, lists, bold, italics, links, code).
+            
+            Instructions:
+            1. Start with a clear introduction of what your response is about.
+            2. Keep the tone **concise**, **professional**, and **easy to read**.
+            3. Do **not repeat the question**.
+            4. Avoid vague filler phrases like "it's a good idea" or "you may find that...".
+            5. End with a short summary or conclusion if appropriate.
+            6. Always provide a **farewell** such as "Feel free to ask if you have more questions!".
+            7. Answer in **Markdown format** using **bold**, **lists**, and a **farewell message**.
+            <|user|>
+            $userInput.
+            <|assistant|>
+            """.trimIndent()
 
         val jsonBody = buildJsonObject {
             put("inputs", formattedInput)
@@ -57,13 +59,18 @@ class Zephyr7bBeta {
      * @param zephyrReply The response from the model
      * @return The formatted response
      */
-    fun cleanZephyrResponse(raw: String): String {
+    fun cleanZephyrResponse(raw: String, userQuery: String): String {
         return raw
-            .replace(Regex("""\[/?(INST|ASSIST|Assistant Query|USER)\]""", RegexOption.IGNORE_CASE), "") // strip tags
-            .replace(Regex("""(?is)User\s*query\s*:\s*.*?Instructions\s*End\.?"""), "") // remove everything between 'User query:' and 'Instructions End'            .replace(Regex("""^.*?\[/?INST\]""", RegexOption.IGNORE_CASE), "") // removes any echoed prompt before INST
-            .replace(Regex("""^\s*\n""", RegexOption.MULTILINE), "") // cleans up blank leading lines
+            // Remove system/instruction block before the user query
+            .replace(Regex("(?s)^.*?\\b${Regex.escape(userQuery)}\\b\\s*"), "")
+            // Remove special tags like <|user|>, <|system|>, <|assistant|>
+            .replace(Regex("<\\|.*?\\|>"), "")
+            // Remove extra whitespace
+            .replace(Regex("""(\r?\n){3,}"""), "\n\n")
             .trim()
     }
+
+
 
     /**
      * Function to format the user input into a prompt for the model
@@ -122,7 +129,7 @@ class Zephyr7bBeta {
                             if (parsedJson is JsonArray && parsedJson.isNotEmpty()) {
                                 val reply = parsedJson[0].jsonObject["generated_text"]?.jsonPrimitive?.content
                                 if (reply != null) {
-                                    val cleanedReply = cleanZephyrResponse(reply)
+                                    val cleanedReply = cleanZephyrResponse(reply, input)
                                     return cleanedReply
                                 }
                             }

@@ -9,8 +9,13 @@
 
 .bot strong {
   font-weight: bold;
+    color: #444;
 }
 
 .bot em {
   font-style: italic;
+}
+
+.bot p {
+  margin: 8px 0;
 }

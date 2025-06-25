@@ -36,12 +36,14 @@ fun main() {
         }
         routing {
             chatRoutes()
-            staticFiles("/", File("frontend/html")) {
+            reportDataRoute()
+            staticFiles("/", File(".")) {
                 default("index.html")
             }
 
             staticFiles("/css", File("frontend/css"))
             staticFiles("/js", File("frontend/js")) // If you have JS too
+            staticFiles("/html", File("frontend/static")) // If you have HTML files
         }
     }.start(wait = true)
 }

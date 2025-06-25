@@ -10,21 +10,88 @@
 
 </head>
 <body>
-<!------ Chatbot section ------>
-<div class="chat-container">
 
-  <div id="chatbox"></div>
+<div id="main_wrapper">
 
-  <form id="chat-form">
-    <input type="text" id="user-input" placeholder="Ask me something..." autocomplete="off" required />
-    <button type="submit">Send</button>
-  </form>
+  <!------ Chatbot Introduction ------>
+
+  <div id="bot-showcase">
+    <h2>About This Chatbot</h2>
+    <p>This chatbot is designed for <strong>general knowledge conversation and learning</strong>. You can ask it questions, get structured answers, and even view evaluation reports of its performance.</p>
+
+    <h3>Models Used</h3>
+    <ul>
+      <li><strong>Zephyr-7B</strong> (primary model): Chosen for its strong reasoning and conversational ability. It is prone to timeouts due to being Hugging Face API. This is the reason is the primary model, so we can perform a fallback to Mistral, which also demonstrates a much better responses.</li>
+      <br>
+      <li><strong>Mistral-7B</strong> (fallback model): Automatically used when Zephyr is unavailable or times out. It provides extended and relevant responses. Furthermore, it pays more attention to the prompt instruction passed than the Zephyr model.</li>
+    </ul>
+
+    <h3>Powered By</h3>
+    <ul>
+      <li><strong>Hugging Face Inference API</strong> – for fast, hosted model responses.</li>
+      <li><strong>Markdown-it</strong> – for cleanly rendering Markdown responses.</li>
+      <li><strong>Promptfoo</strong> – used for model-based evaluation with GTP4o to evaluate and score models output for accuracy, tone, and helpfulness.</li>
+      <li><strong>Playwright</strong> – helps to extract relevant info from the browser generated promptfoo report to display it to you.</li>
+    </ul>
+
+    <h3>Features</h3>
+    <ul>
+      <li>Typing animation and timeout hinting.</li>
+      <li>Markdown support with bullet points, headers, and formatting.</li>
+      <li>Integrated report button to view <strong>LLM-generated evaluation feedback</strong>.</li>
+    </ul>
+
+    <p style="margin-top: 10px;">This demo showcases a lightweight yet powerful LLM chatbot system using modern APIs and open models. Designed to be flexible, transparent, and developer-friendly.</p>
+  </div>
+  <!------ Chatbot Introduction End ------>
+
+
+  <!------ Chatbot section ------>
+  <div class="chat-container">
+
+    <div id="chatbox"></div>
+
+    <form id="chat-form">
+      <textarea type="text" id="user-input" placeholder="Ask me something..." autocomplete="off" required ></textarea>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+  <!------ Chatbot section end ------>
+
+
+  <div id="reportModal" style="display: none; position: fixed; top: 10%; left: 50%; transform: translateX(-50%);
+  width: 80%; max-width: 600px; background: white; padding: 20px; box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  z-index: 9999; border-radius: 8px; font-family: sans-serif;">
+    <h3>📝 Prompt Evaluation</h3>
+    <p><strong>Assertions:</strong></p>
+    <ul id="modalAssertions"></ul>
+    <p><strong>Prompt:</strong> <span id="modalPrompt"></span></p>
+    <p><strong>Outputs:</strong></p>
+    <pre id="modalOutputs" style="white-space: pre-wrap; background: #f5f5f5; padding: 10px;"></pre>
+    <button onclick="document.getElementById('reportModal').style.display='none'" style="margin-top: 10px;">Close</button>
+  </div>
+
 </div>
 
-<!------ Chatbot section end ------>
 
-<script src="frontend/js/app.js"></script>
+
+<script>
+  let dynamicReport = null;
+
+  async function fetchReportData() {
+    try {
+      const res = await fetch('/api/report-data');
+      dynamicReport = await res.json();
+    } catch (err) {
+      console.error('Failed to load report data:', err);
+    }
+  }
+
+  fetchReportData();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+<script src="frontend/js/app.js"></script>
 
 </body>
 </html>
