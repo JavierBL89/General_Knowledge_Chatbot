@@ -40,3 +40,4 @@ build/
 ### Env ###
 .env
 venv/venv/
+node_modules/

@@ -4,9 +4,9 @@
 
 This project is a simple and interactive **general knowledge chatbot** built using:
 
-- 🧠 **Hugging Face Inference API** for intelligent responses.
-- 💻 **Kotlin (Ktor)** as the backend server.
-- 🌐 **HTML + JavaScript** frontend for desktop and mobile use.
+- **Hugging Face Inference API** for intelligent responses.
+- **Kotlin (Ktor)** as the backend server.
+- **HTML + JavaScript** frontend for desktop and mobile use.
 
 ---
 
@@ -45,8 +45,7 @@ This project is a simple and interactive **general knowledge chatbot** built usi
 This project includes automated LLM evaluations using **Promptfoo**, covering:
 
 - **Sanity & relevance checks**
-- **Semantic similarity scoring**
-- **ROUGE-N overlap**
+- **accuracy, tone, and helpfulness**
 - **Latency measurements**
 
 ### 🧪 Evaluation Files
@@ -54,13 +53,10 @@ This project includes automated LLM evaluations using **Promptfoo**, covering:
 All evaluation configs are stored in `.github/workflows/`:
 
 - `promptfoo_mixed_tests.yaml`
-- `promptfoo_relevance_or_sanity_tests.yaml`
-- `promptfoo_ROUGE_tests.yaml`
-- `promptfoo_semantic_scoring_tests.yaml`
 
-### 🚀 CI Integration
+### 🚀 CI Integration with GitHub Actions
 
-Every PR or push triggers `llm-eval.yml` to ensure that responses remain:
+Every push triggers `llm-eval.yml` to ensure that responses remain:
 
 - Relevant ✅
 - Well-structured 📋
