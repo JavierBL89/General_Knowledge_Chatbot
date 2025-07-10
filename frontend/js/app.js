@@ -16,7 +16,6 @@ const md = window.markdownit({
 
 window.addEventListener('DOMContentLoaded', async () => {
   typeBotResponse("👋 Hey! How can I help you today?\n\nE.g, try asking:\n➡️ *List 3 benefits of meditation*", "bot");
-  loadEvaluationReport();
 });
 
 function createBotBubbleWithSpinner() {
@@ -155,6 +154,7 @@ function displayMessage(message, sender) {
   div.textContent = message;
 }
 
+
 function showReportButton() {
   const reportDiv = document.createElement('div');
   reportDiv.className = 'bot';
@@ -168,36 +168,61 @@ function showReportButton() {
   chatbox.scrollTop = chatbox.scrollHeight;
 }
 
-function showEvalReportModal() {
-  if (!dynamicReport) {
-    alert("Report not loaded yet.");
-    return;
+
+let dynamicReport = null;
+
+async function fetchReportData() {
+  const isLocal = window.location.hostname === 'localhost' ||
+                  window.location.hostname.startsWith('127.') ||
+                  window.location.hostname === '0.0.0.0';
+
+  const fetchUrl = isLocal ? '/api/report-data' : 'reportData.json';
+
+  try {
+    const res = await fetch(fetchUrl);
+    if (!res.ok) throw new Error(`Failed to fetch from ${fetchUrl}`);
+
+    dynamicReport = await res.json();
+
+    if (!dynamicReport) {
+      alert("Report not loaded yet.");
+      return;
+    }
+
+    const { prompt, output, assertions } = dynamicReport;
+    document.getElementById('modalPrompt').textContent = prompt;
+    document.getElementById('modalOutputs').textContent = output;
+    document.getElementById('reportModal').style.display = 'block';
+
+    const assertionsList = document.getElementById('modalAssertions');
+    assertionsList.innerHTML = '';
+
+    for (const [icon, score, type, question, reason] of assertions) {
+      if (icon === '_promptfooFileMetadata') continue;
+
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span><strong style="color: black;">Model-based Eval -</strong> <span style="color: #007BFF;">${question}</span></span><br>
+        <span>${icon} <em>${reason}</em></span>
+      `;
+      assertionsList.appendChild(li);
+    }
+  } catch (err) {
+    console.warn("❌ Could not load evaluation report:", err);
+    alert("⚠️ Failed to load evaluation report.");
   }
-
-  const { prompt, output, assertions } = dynamicReport;
-  document.getElementById('modalPrompt').textContent = prompt;
-  document.getElementById('modalOutputs').textContent = output;
-
-  const assertionsList = document.getElementById('modalAssertions');
-  assertionsList.innerHTML = '';
-
-  for (const [icon, score, type, question, reason] of assertions) {
-    if (icon === '_promptfooFileMetadata') continue;
-
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <span><strong style="color: black;">Model-based Eval -</strong> <span style="color: #007BFF;">${question}</span></span><br>
-      <span>${icon} <em>${reason}</em></span>
-    `;
-    assertionsList.appendChild(li);
-  }
-
-  document.getElementById('reportModal').style.display = 'block';
 }
 
+// 👇 Now this calls the fetch and render function
+function showEvalReportModal() {
+  fetchReportData();
+}
+
+
 async function loadEvaluationReport() {
+
   try {
-    const res = await fetch('/api/report-data');
+    const res = await fetch('/report-data');
     if (!res.ok) throw new Error("Report not found");
     dynamicReport = await res.json();
     console.log("✅ Evaluation report loaded");

@@ -55,7 +55,7 @@ fun Routing.chatRoutes() {
 fun Route.reportDataRoute() {
     get("/api/report-data") {
         try {
-            val fileContent = File("json_files/reportData.json").readText(Charsets.UTF_8)
+            val fileContent = File("frontend/static/reportData.json").readText(Charsets.UTF_8)
             call.respondText(fileContent, ContentType.Application.Json)
         } catch (e: Exception) {
             call.respond(HttpStatusCode.InternalServerError, "Failed to read report data: ${e.message}")

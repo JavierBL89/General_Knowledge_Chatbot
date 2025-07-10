@@ -1,0 +1,24 @@
+{
+  "name": "gen_kn_chatbot2",
+  "version": "1.0.0",
+  "description": "[![Promptfoo Evals](https://github.com/your-username/your-repo/actions/workflows/llm-eval.yml/badge.svg)](https://github.com/your-username/your-repo/actions/workflows/llm-eval.yml)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JavierBL89/General_Knowledge_Chatbot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JavierBL89/General_Knowledge_Chatbot/issues"
+  },
+  "homepage": "https://github.com/JavierBL89/General_Knowledge_Chatbot#readme",
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "playwright": "^1.53.1"
+  }
+}

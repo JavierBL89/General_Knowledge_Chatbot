@@ -75,20 +75,6 @@
 
 
 
-<script>
-  let dynamicReport = null;
-
-  async function fetchReportData() {
-    try {
-      const res = await fetch('/api/report-data');
-      dynamicReport = await res.json();
-    } catch (err) {
-      console.error('Failed to load report data:', err);
-    }
-  }
-
-  fetchReportData();
-</script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
 <script src="frontend/js/app.js"></script>
