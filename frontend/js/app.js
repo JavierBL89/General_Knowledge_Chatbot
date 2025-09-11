@@ -54,7 +54,7 @@ form.addEventListener('submit', async (e) => {
       timeoutMessageDiv = document.createElement('div');
       timeoutMessageDiv.className = 'bot';
       timeoutMessageDiv.id = 'timeout-hint';
-      timeoutMessageDiv.textContent = "⏳ This is taking longer... Zephyr7b server might be busy.";
+      timeoutMessageDiv.textContent = "⏳ Just a second..or 2, server might be busy :)";
       chatbox.appendChild(timeoutMessageDiv);
       chatbox.scrollTop = chatbox.scrollHeight;
       timeoutMessageShown = true;
@@ -96,6 +96,13 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
+// 👇 Listen for Enter inside the input
+input.addEventListener("keydown", function (e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault(); // stop newline in textarea
+    form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+  }
+});
 
 function typeBotResponse(message, sender) {
   const content = document.createElement('div');
@@ -114,23 +121,9 @@ function typeBotResponse(message, sender) {
     return;
   }
 
-  // ✅ Enhanced Markdown cleaning with farewell handling
-  let cleaned = message
-     .replace(/\\n/g, '\n')  // Unescape newlines
-       .replace(/\*\*\n(\d+\.)/g, '**$1')  // Fix broken bold list items
-       .replace(/\n{3,}/g, '\n\n');  // Normalize excessive newlines
-  // 2. Protect properly formatted bold list items
-  cleaned = cleaned.replace(/^\*\*(\d+\. .+?)\*\*$/gm, '{{PROTECTED}}$1{{/PROTECTED}}');
-  // 3. Remove unwanted section headers
-  cleaned = cleaned.replace(/^\*\*(Introduction|Conclusion|Farewell):?\*\*$/gim, '');
-  // 4. Handle farewell with spacing
-  cleaned = cleaned.replace(/(.*)(Feel free to ask.*$)/i, '$1\n\n$2'); // Add two line breaks before farewell);  // 5. Restore protected items and final cleanup
-  cleaned = cleaned
-    .replace(/\{\{PROTECTED\}\}(.+?)\{\{\/PROTECTED\}\}/g, '**$1**')
-    .trim();
 
   // Split into chunks while preserving list structure
-  const rawChunks = cleaned.split(/\n{2,}(?!\s*\*\*\d+\.)/);
+  const rawChunks = message.split(/\n{2,}(?!\s*\*\*\d+\.)/);
 
   let index = 0;
   const typeChunk = () => {

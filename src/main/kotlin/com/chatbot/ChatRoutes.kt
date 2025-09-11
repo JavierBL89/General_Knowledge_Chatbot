@@ -25,18 +25,18 @@ fun Routing.chatRoutes() {
             val message = body.message
 
 
-            val zephyr7bBeta = Zephyr7bBeta()
-            val zephyr7bBetaReply = zephyr7bBeta.getModelResponseFromHFSpace(message)
-            val formattedModelResponse = formatModelResponse(zephyr7bBetaReply)
+            val zephyr7bBeta = Llama3ChatClient()
+            val lama_response = zephyr7bBeta.getModelResponse(message)
+            //val formattedModelResponse = formatModelResponse(zephyr7bBetaReply)
             // Format the model response
-            val finalFormattedReply = zephyr7bBeta.responseFormatWithLines(formattedModelResponse)
+            //val finalFormattedReply = zephyr7bBeta.responseFormatWithLines(formattedModelResponse)
 
             val evaluator = PromptTestBridge()
-            val evalResultCode = evaluator.testUserInput(message, formattedModelResponse)
+            val evalResultCode = evaluator.testUserInput(message, lama_response)
             val evaluationPassed = (evalResultCode == 0)
 
             val response = ChatResponse(
-                reply = finalFormattedReply,
+                reply = lama_response,
                 evalGenerated = evaluationPassed
             )
 

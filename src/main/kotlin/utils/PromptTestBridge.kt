@@ -1,7 +1,5 @@
 package utils
 
-import com.chatbot.Mistral7bFallBackModelHFAPI
-import com.chatbot.Zephyr7bBeta
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.File

@@ -19,6 +19,6 @@
   "homepage": "https://github.com/JavierBL89/General_Knowledge_Chatbot#readme",
   "dependencies": {
     "markdown-it": "^14.1.0",
-    "playwright": "^1.53.1"
+    "playwright": "^1.55.0"
   }
 }

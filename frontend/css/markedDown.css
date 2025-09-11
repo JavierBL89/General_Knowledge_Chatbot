@@ -18,4 +18,11 @@
 
 .bot p {
   margin: 8px 0;
+  color: grey;
+}
+
+.bot h1, .bot h2, .bot h3, .bot h4, .bot h5, .bot h6 .bot strong {
+  font-size: 1rem;       /* same as normal text */
+  font-weight: bold;     /* keep bold */
+  margin: 0.5em 0 0.3em; /* reduce spacing */
 }

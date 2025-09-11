@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
+refrom transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 from flask import Flask, request, jsonify
 
 import numpy

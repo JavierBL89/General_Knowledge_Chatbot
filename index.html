@@ -16,17 +16,24 @@
   <!------ Chatbot Introduction ------>
 
   <div id="bot-showcase">
-    <h2>About This Chatbot</h2>
-    <p>This chatbot is designed for <strong>general knowledge conversation and learning</strong>. You can ask it questions, get structured answers, and even view evaluation reports of its performance.</p>
+    <h2> 🤖 About This Chatbot</h2>
+    <p>This chatbot was designed for <strong>general knowledge conversation and my AI learning</strong>. You can ask it questions, get structured answers, and even view evaluation reports of its performance.</p>
 
-    <h3>Models Used</h3>
+    <h3>🧠 Models Used</h3>
+    <p>Two open-source models were utilized in the first place for this chatbot, but they were removed from Inference on Hugging Face.</p>
+    <p>Lama3 Instruct was replacement. Such a capable model!</p>
+
     <ul>
-      <li><strong>Zephyr-7B</strong> (primary model): Chosen for its strong reasoning and conversational ability. It is prone to timeouts due to being Hugging Face API. This is the reason is the primary model, so we can perform a fallback to Mistral, which also demonstrates a much better responses.</li>
+      <li>- <strong>LLaMA-3 Instruct</strong> (primary model): A state-of-the-art instruction-tuned language model that powers all responses.
+        It provides high-quality answers, reasoning ability, and conversational fluency.
+         </li>
+      <p>----------------------- </p>
+      <li><strong>Zephyr-7B</strong> (It Was primary model): Chosen for its strong reasoning and conversational ability. It is prone to timeouts due to being Hugging Face API. This is the reason is the primary model, so we can perform a fallback to Mistral, which also demonstrates a much better responses.</li>
       <br>
       <li><strong>Mistral-7B</strong> (fallback model): Automatically used when Zephyr is unavailable or times out. It provides extended and relevant responses. Furthermore, it pays more attention to the prompt instruction passed than the Zephyr model.</li>
     </ul>
 
-    <h3>Powered By</h3>
+    <h3> ⚡ Powered By</h3>
     <ul>
       <li><strong>Hugging Face Inference API</strong> – for fast, hosted model responses.</li>
       <li><strong>Markdown-it</strong> – for cleanly rendering Markdown responses.</li>
@@ -34,8 +41,9 @@
       <li><strong>Playwright</strong> – helps to extract relevant info from the browser generated promptfoo report to display it to you.</li>
     </ul>
 
-    <h3>Features</h3>
+    <h3>✨ Features</h3>
     <ul>
+      <li>Responds in the language used by the user (Spanish, English, Italian,...and more)</li>
       <li>Typing animation and timeout hinting.</li>
       <li>Markdown support with bullet points, headers, and formatting.</li>
       <li>Integrated report button to view <strong>LLM-generated evaluation feedback</strong>.</li>

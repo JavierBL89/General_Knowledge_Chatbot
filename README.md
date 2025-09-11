@@ -8,6 +8,11 @@ This project is a simple and interactive **general knowledge chatbot** built usi
 - **Kotlin (Ktor)** as the backend server.
 - **HTML + JavaScript** frontend for desktop and mobile use.
 
+
+## Live Site
+
+[![Live Site](https://javierbl89.github.io/General_Knowledge_Chatbot/] with GitHub Pages)](https://javierbl89.github.io/General_Knowledge_Chatbot/)
+
 ---
 
 ## 🗂️ Sections

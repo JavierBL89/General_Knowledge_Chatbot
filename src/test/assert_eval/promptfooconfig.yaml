@@ -1,11 +1,11 @@
-prompts: list 3 benefits of meditation
+prompts: une recette pour cuisiner du poulet?
 
 providers:
   - openai:gpt-4
 
 tests:
   - vars:
-      input: list 3 benefits of meditation
+      input: une recette pour cuisiner du poulet?
     assert:
       - type: model-graded-closedqa
         value: Does the output provide a clear and complete answer to the prompt?

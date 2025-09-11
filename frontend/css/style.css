@@ -14,31 +14,95 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 1400px;
+  max-width: 1600px;
+
   }
 
-#bot-showcase{
-width: 90%;
-max-width: 600px;
-padding: 20px;
-border: 2px solid red;
-background-color: #fefefe;
-font-family: sans-serif;
-font-size: 16px;
-letter-spacing: 0.7px;
-}
-
-
+/* Wrapper card */
 #bot-showcase {
-width: 90%;
-max-width: 600px;
-padding: 20px;
-border: 2px solid red;
-background-color: #fefefe;
-font-family: sans-serif;
-font-size: 14px;
-letters-spacing: 0.9px;
+  background: #ffffff;
+  border: 1px solid #e5e9ef;
+  border-radius: 12px;
+  padding: 28px 32px;
+  max-width: 700px;
+  margin: 60px auto;
+  margin-top: 100px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  color: #1d2a33;
 }
+
+/* Headings */
+#bot-showcase h2 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #0d1b2a;
+}
+
+#bot-showcase h3 {
+  font-size: 1.2rem;
+  margin-top: 22px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: #1a2e45;
+  border-left: 4px solid #3a86ff;
+  padding-left: 8px;
+}
+
+/* Paragraphs */
+#bot-showcase p {
+  margin: 0.5em 0;
+  color: #334155;
+  font-size: 0.97rem;
+}
+
+/* Lists */
+#bot-showcase ul {
+  margin: 0.4em 0 1em 1.2em;
+  padding: 0;
+}
+
+#bot-showcase li {
+  margin: 0.35em 0;
+  font-size: 0.95rem;
+  color: #1f2937;
+}
+
+#bot-showcase li strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+/* Horizontal divider for legacy/removed models */
+#bot-showcase .deprecated {
+  margin: 10px 0;
+  border-top: 1px dashed #cbd5e1;
+}
+
+/* Callout (optional tip/info box) */
+#bot-showcase .callout {
+  margin: 1em 0;
+  padding: 12px 14px;
+  background: #f8fafc;
+  border-left: 4px solid #3a86ff;
+  border-radius: 8px;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+/* Small emphasis */
+#bot-showcase em {
+  color: #475569;
+}
+
 
 .chat-container {
   background: white;
