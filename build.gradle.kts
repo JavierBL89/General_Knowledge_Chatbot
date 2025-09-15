@@ -9,7 +9,7 @@ group = "com.example"
 version = "1.0"
 
 application {
-    mainClass.set("com.example.AppKt")
+    mainClass.set("com.chatbot.MainKt")
 }
 
 repositories {
