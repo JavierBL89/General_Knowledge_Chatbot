@@ -1,23 +1,25 @@
-# -------- Stage 1: Build the Kotlin app --------
-FROM gradle:7.5-jdk17 AS builder
+# Use an official JDK image
+FROM openjdk:17-jdk-slim as build
 
+# Install Maven
+RUN apt-get update && apt-get install -y maven
+
+# Copy project files
 WORKDIR /app
-
 COPY . .
 
-# Build the fat JAR
-RUN gradle fatJar
+# Build the app
+RUN mvn clean package -DskipTests
 
-# -------- Stage 2: Run the app --------
-FROM openjdk:17-slim
-
+# -------------------------
+# Run Stage
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-# Copy only the built jar
-COPY --from=builder /app/build/libs/*-all.jar app.jar
+# Copy built jar from build stage
+COPY --from=build /app/target/Gen_kn_Chatbot2-1.0-SNAPSHOT.jar app.jar
 
-# Set up PORT environment variable (used by Render)
-ENV PORT=8080
+# Expose port (Render provides $PORT, so just document it)
 EXPOSE 8080
 
 # Run the app
