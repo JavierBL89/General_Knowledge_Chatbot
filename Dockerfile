@@ -17,7 +17,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy built jar from build stage
-COPY --from=build /app/target/Gen_kn_Chatbot2-1.0-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/general-knowledge-chatbot-1.0-SNAPSHOTOT.jar app.jar
 
 # Expose port (Render provides $PORT, so just document it)
 EXPOSE 8080
