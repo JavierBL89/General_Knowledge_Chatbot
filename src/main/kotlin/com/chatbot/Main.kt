@@ -16,6 +16,7 @@ import kotlinx.serialization.json.Json
 
 import java.io.File
 import io.ktor.server.http.content.* // Needed for staticFiles
+import io.ktor.server.response.*
 
 fun main() {
     embeddedServer(Netty, port = 8080) {
@@ -44,5 +45,16 @@ fun main() {
             staticFiles("/js", File("frontend/js")) // If you have JS too
             staticFiles("/html", File("frontend/static")) // If you have HTML files
         }
+
+
     }.start(wait = true)
+
+
+    fun Application.module() {
+        routing {
+            get("/") {
+                call.respondText("Hello from Ktor on Render!")
+            }
+        }
+    }
 }

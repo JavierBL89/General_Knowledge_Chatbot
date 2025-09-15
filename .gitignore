@@ -27,3 +27,4 @@ frontend/static/reportData.json
 # --- Build Folders ---
 build/
 target/
+/.gradle
