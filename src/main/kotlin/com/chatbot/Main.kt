@@ -43,7 +43,7 @@ fun main() {
             reportDataRoute()
 
             // Static file serving - simplified and fixed
-            staticFiles("/", File("frontend")) {
+            staticFiles("/", File("frontend/static")) {
                 default("index.html")
             }
             staticFiles("/css", File("frontend/css"))
