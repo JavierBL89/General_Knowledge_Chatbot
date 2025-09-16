@@ -218,6 +218,9 @@
                   <mainClass>com.chatbot.MainKt</mainClass>
                 </transformer>
               </transformers>
+              <!-- ✅ Always produce a `*-shaded.jar` -->
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>shaded</shadedClassifierName>
             </configuration>
           </execution>
         </executions>
