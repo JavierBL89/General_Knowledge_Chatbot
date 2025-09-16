@@ -19,7 +19,7 @@ WORKDIR /app
 # Copy built jar from build stage
 COPY --from=build /app/target/*-shaded.jar app.jar
 # Copy frontend static files
-COPY --from=build /app/frontend /app/frontend
+COPY ./frontend /app/frontend
 
 # Expose port (Render provides $PORT, so just document it)
 EXPOSE 8080
