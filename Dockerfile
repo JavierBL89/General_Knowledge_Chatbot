@@ -18,8 +18,13 @@ WORKDIR /app
 
 # Copy built jar from build stage
 COPY --from=build /app/target/*-shaded.jar app.jar
-# Copy frontend static files to the correct location
-COPY --from=build /app/frontend ./frontend
+
+# Copy frontend static files - make sure the source path is correct
+COPY ./frontend ./frontend
+
+# Debug: List contents to verify
+RUN ls -la /app/
+RUN ls -la /app/frontend/ || echo "Frontend directory not found"
 
 # Expose port (Render provides $PORT, so just document it)
 EXPOSE 8080

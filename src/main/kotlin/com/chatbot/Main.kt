@@ -35,23 +35,22 @@ fun main() {
         }
         routing {
             // Add a basic health check route
-            get("/") {
+            get("/health") {
                 call.respondText("Hello from Ktor on Render!")
             }
 
             chatRoutes()
             reportDataRoute()
 
-            staticFiles("/css", File("frontend/css"))
-            staticFiles("/js", File("frontend/js")) // If you have JS too
-            staticFiles("/html", File("frontend/static")) // If you have HTML files
-
             // Static file serving - simplified and fixed
             staticFiles("/", File("frontend")) {
                 default("index.html")
             }
+            staticFiles("/css", File("frontend/css"))
+            staticFiles("/js", File("frontend/js")) // If you have JS too
+            staticFiles("/html", File("frontend/static")) // If you have HTML files
+
         }
     }.start(wait = true)
 }
 
-// Remove the duplicate module function that was causing syntax errors
