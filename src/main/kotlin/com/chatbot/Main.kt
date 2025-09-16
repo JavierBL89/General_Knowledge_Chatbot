@@ -12,11 +12,8 @@ import io.ktor.server.plugins.cors.routing.CORS
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-
-
-import java.io.File
-import io.ktor.server.http.content.* // Needed for staticFiles
 import io.ktor.server.response.*
+import java.io.File
 
 fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 8080
@@ -27,6 +24,7 @@ fun main() {
             anyHost() // allow any frontend (localhost:5500, etc.)
             allowHeader(HttpHeaders.ContentType)
             allowMethod(HttpMethod.Post)
+            allowMethod(HttpMethod.Get) // Added GET method
         }
         install(ContentNegotiation) {
             json(Json {
@@ -36,26 +34,24 @@ fun main() {
             })
         }
         routing {
+            // Add a basic health check route
+            get("/") {
+                call.respondText("Hello from Ktor on Render!")
+            }
+
             chatRoutes()
             reportDataRoute()
-            staticFiles("/", File("frontend")) {
-                default("index.html")
-            }
 
             staticFiles("/css", File("frontend/css"))
             staticFiles("/js", File("frontend/js")) // If you have JS too
             staticFiles("/html", File("frontend/static")) // If you have HTML files
-        }
 
-
-    }.start(wait = true)
-
-
-    fun Application.module() {
-        routing {
-            get("/") {
-                call.respondText("Hello from Ktor on Render!")
+            // Static file serving - simplified and fixed
+            staticFiles("/", File("frontend")) {
+                default("index.html")
             }
         }
-    }
+    }.start(wait = true)
 }
+
+// Remove the duplicate module function that was causing syntax errors
