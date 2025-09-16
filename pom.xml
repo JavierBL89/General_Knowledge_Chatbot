@@ -4,6 +4,7 @@
 
   <modelVersion>4.0.0</modelVersion>
 
+
   <groupId>com.chatbot</groupId>
   <artifactId>general-knowledge-chatbot</artifactId>
   <version>1.0-SNAPSHOT</version>
@@ -28,6 +29,7 @@
 
 
   </repositories>
+
 
   <dependencies>
     <!-- Kotlin Standard Library -->
@@ -220,6 +222,7 @@
           </execution>
         </executions>
       </plugin>
+
     </plugins>
   </build>
 
