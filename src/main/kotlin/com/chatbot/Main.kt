@@ -19,7 +19,8 @@ import io.ktor.server.http.content.* // Needed for staticFiles
 import io.ktor.server.response.*
 
 fun main() {
-    embeddedServer(Netty, port = 8080) {
+    val port = System.getenv("PORT")?.toInt() ?: 8080
+    embeddedServer(Netty, port = port) {
         install(DefaultHeaders)
         install(CallLogging)
         install(CORS) {
@@ -37,7 +38,7 @@ fun main() {
         routing {
             chatRoutes()
             reportDataRoute()
-            staticFiles("/", File(".")) {
+            staticFiles("/", File("frontend")) {
                 default("index.html")
             }
 
