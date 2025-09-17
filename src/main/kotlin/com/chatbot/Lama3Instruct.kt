@@ -1,6 +1,8 @@
 package com.chatbot
 
 import com.github.kittinunf.fuel.Fuel
+import io.github.cdimascio.dotenv.Dotenv
+import io.github.cdimascio.dotenv.DotenvException
 import io.github.cdimascio.dotenv.dotenv
 import kotlinx.serialization.json.*
 
@@ -9,8 +11,13 @@ import kotlinx.serialization.json.*
  */
 class Llama3ChatClient {
 
-    private val dotenv = dotenv()
-    private val HF_TOKEN = dotenv["HF_API_KEY_TOKEN"] // must exist in your .env
+    val dotEnv = try {
+        Dotenv.load()
+    } catch (e: DotenvException) {
+        null
+    }
+    val HF_TOKEN = dotEnv?.get("HF_API_KEY_TOKEN") ?: System.getenv("HF_API_KEY_TOKEN")
+
     private val apiUrl = "https://router.huggingface.co/v1/chat/completions"
 
     /**
