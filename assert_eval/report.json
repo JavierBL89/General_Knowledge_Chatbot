@@ -1,0 +1,246 @@
+{
+  "evalId": "eval-b9W-2025-09-17T19:01:46",
+  "results": {
+    "version": 3,
+    "timestamp": "2025-09-17T19:01:46.063Z",
+    "prompts": [
+      {
+        "raw": "List 3 benefits of meditation",
+        "label": "List 3 benefits of meditation",
+        "id": "37e6e9e2a47df840719972e3b8add3959877b1676cf33315ba39a0c32d98b309",
+        "provider": "openai:gpt-4",
+        "metrics": {
+          "score": 1,
+          "testPassCount": 1,
+          "testFailCount": 0,
+          "testErrorCount": 0,
+          "assertPassCount": 3,
+          "assertFailCount": 0,
+          "totalLatencyMs": 7,
+          "tokenUsage": {
+            "total": 133,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 133,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0
+            },
+            "assertions": {
+              "total": 1460,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 1460
+            }
+          },
+          "namedScores": {},
+          "namedScoresCount": {},
+          "cost": 0.0075899999999999995
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0.0075899999999999995,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 1460,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 1460
+          },
+          "componentResults": [
+            {
+              "assertion": {
+                "type": "model-graded-closedqa",
+                "value": "Does the output provide a clear and complete answer to the prompt?"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The submission meets the criterion",
+              "tokensUsed": {
+                "total": 469,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 469,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              }
+            },
+            {
+              "assertion": {
+                "type": "model-graded-closedqa",
+                "value": "Does the response stay relevant to the user's prompt?"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The submission meets the criterion",
+              "tokensUsed": {
+                "total": 478,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 478,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              }
+            },
+            {
+              "assertion": {
+                "type": "model-graded-closedqa",
+                "value": "Is the output coherent, logically structured, and easy to follow?"
+              },
+              "pass": true,
+              "score": 1,
+              "reason": "The submission meets the criterion",
+              "tokensUsed": {
+                "total": 513,
+                "prompt": 0,
+                "completion": 0,
+                "cached": 513,
+                "completionDetails": {
+                  "reasoning": 0,
+                  "acceptedPrediction": 0,
+                  "rejectedPrediction": 0
+                }
+              }
+            }
+          ],
+          "assertion": null
+        },
+        "id": "2b746d12-09d1-4afe-a64b-ab875af467e3",
+        "latencyMs": 7,
+        "namedScores": {},
+        "prompt": {
+          "raw": "List 3 benefits of meditation",
+          "label": "List 3 benefits of meditation"
+        },
+        "promptId": "37e6e9e2a47df840719972e3b8add3959877b1676cf33315ba39a0c32d98b309",
+        "promptIdx": 0,
+        "provider": {
+          "id": "openai:gpt-4",
+          "label": ""
+        },
+        "response": {
+          "output": "1. Reduced stress and anxiety: Regular meditation can help to reduce levels of stress and anxiety. It can help your mind to switch off from the worries and stresses of the day, promoting a feeling of calm and relaxation.\n\n2. Improved concentration and focus: By practicing mindfulness and quiet contemplation, meditation can increase your capacity to concentrate and maintain focus on tasks.\n\n3. Improved emotional well-being: Regular meditation can also help to boost your mood and improve overall emotional well-being. It can help to reduce feelings of depression, anxiety, and anger, and promote feelings of happiness, peace, and balance.",
+          "tokenUsage": {
+            "cached": 133,
+            "total": 133
+          },
+          "cached": true,
+          "cost": 0.0075899999999999995
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "input": "List 3 benefits of meditation"
+          },
+          "assert": [
+            {
+              "type": "model-graded-closedqa",
+              "value": "Does the output provide a clear and complete answer to the prompt?"
+            },
+            {
+              "type": "model-graded-closedqa",
+              "value": "Does the response stay relevant to the user's prompt?"
+            },
+            {
+              "type": "model-graded-closedqa",
+              "value": "Is the output coherent, logically structured, and easy to follow?"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "vars": {
+          "input": "List 3 benefits of meditation"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      }
+    ],
+    "stats": {
+      "successes": 1,
+      "failures": 0,
+      "errors": 0,
+      "tokenUsage": {
+        "cached": 133,
+        "completion": 0,
+        "prompt": 0,
+        "total": 133,
+        "numRequests": 1,
+        "completionDetails": {
+          "reasoning": 0,
+          "acceptedPrediction": 0,
+          "rejectedPrediction": 0
+        },
+        "assertions": {
+          "total": 1460,
+          "prompt": 0,
+          "completion": 0,
+          "cached": 1460
+        }
+      }
+    }
+  },
+  "config": {
+    "tags": {},
+    "prompts": [
+      "List 3 benefits of meditation"
+    ],
+    "providers": [
+      "openai:gpt-4"
+    ],
+    "tests": [
+      {
+        "vars": {
+          "input": "List 3 benefits of meditation"
+        },
+        "assert": [
+          {
+            "type": "model-graded-closedqa",
+            "value": "Does the output provide a clear and complete answer to the prompt?"
+          },
+          {
+            "type": "model-graded-closedqa",
+            "value": "Does the response stay relevant to the user's prompt?"
+          },
+          {
+            "type": "model-graded-closedqa",
+            "value": "Is the output coherent, logically structured, and easy to follow?"
+          }
+        ]
+      }
+    ],
+    "scenarios": [],
+    "env": {},
+    "sharing": true,
+    "defaultTest": {
+      "vars": {},
+      "assert": [],
+      "options": {},
+      "metadata": {}
+    },
+    "outputPath": [
+      "/Users/javierbastandeleon/Documents/projects/Personal/Gen_kn_Chatbot2/assert_eval/report.json"
+    ],
+    "extensions": [],
+    "metadata": {}
+  },
+  "shareableUrl": null
+}

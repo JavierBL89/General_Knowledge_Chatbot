@@ -4,10 +4,10 @@ const fs = require('fs');
 (async () => {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
-  await page.goto('http://localhost:15500'); // or your actual URL
+  await page.goto('https://general-knowledge-chatbot.onrender.com/'); // or your actual URL
 
   // Step 1: Click the magnifier icon
-  await page.locator('[aria-label="View output and test details"]').first().click({ force: true });
+  await page.locator('[aria-label="View output and test details"]').first().click({ force: true, timeout: 60000 });
 
   // Step 2: Wait for modal content
   await page.waitForSelector('.MuiDialogContent-root');

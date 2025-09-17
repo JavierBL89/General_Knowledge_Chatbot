@@ -18,15 +18,18 @@ class PromptTestBridge {
 
         val jsonEntryPrompt = mapOf("prompt" to user_query)
         val jsonEntryOutput = mapOf("output" to cleanedOutput
-                )
+        )
 
-        val promptJsonlPath = "src/test/assert_eval/model_prompt.jsonl"
+        // Create the directory first
+        File("assert_eval").mkdirs()
+
+        val promptJsonlPath = "assert_eval/model_prompt.jsonl"
         File(promptJsonlPath).writeText("") // clear file
         File(promptJsonlPath).appendText(jsonEntryPrompt.toString())
 
 
         // 2. Write model outputs to JSON file
-        val outputsPath = "src/test/assert_eval/model-outputs.json"
+        val outputsPath = "assert_eval/model-outputs.json"
         File(outputsPath).writeText(
             """[
         ${Json.encodeToString(jsonEntryOutput)}
@@ -34,7 +37,7 @@ class PromptTestBridge {
         )
 
         // 3. Write assertions
-        val promptfooPath = "src/test/assert_eval/promptfooconfig.yaml"
+        val promptfooPath = "assert_eval/promptfooconfig.yaml"
         File(promptfooPath).writeText("""
         prompts: $user_query
 
@@ -69,17 +72,17 @@ class PromptTestBridge {
         val result = ProcessBuilder(
             "promptfoo",
             "eval",
-            "--config", "src/test/assert_eval/promptfooconfig.yaml",
+            "--config", "assert_eval/promptfooconfig.yaml",
             "--model-outputs", outputsPath, // model output as JSON or JSONL
         ).inheritIO().start().waitFor()
 
         ProcessBuilder(
-            "node", "frontend/js/saveReport.js" // or "./scripts/saveReport.js" if it’s in a subfolder
+            "node", "frontend/js/saveReport.js" // or "./scripts/saveReport.js" if it's in a subfolder
         ).inheritIO().start().waitFor()
 
 
         println("Promptfoo eval completed with code: $result")
 
         return result
-        }
+    }
 }
