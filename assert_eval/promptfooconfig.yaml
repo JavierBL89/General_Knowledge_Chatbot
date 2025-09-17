@@ -9,7 +9,9 @@ tests:
     assert:
       - type: model-graded-closedqa
         value: Does the output provide a clear and complete answer to the prompt?
+
       - type: model-graded-closedqa
         value: Does the response stay relevant to the user's prompt?
+
       - type: model-graded-closedqa
         value: Is the output coherent, logically structured, and easy to follow?
