@@ -43,8 +43,9 @@ fun Routing.chatRoutes() {
             call.respond(response)
 
         } catch (e: Exception) {
-            println("❌ Server Error: ${e.message}")
-            call.respond(HttpStatusCode.InternalServerError, mapOf("reply" to "Error: Could not connect to server."))
+            e.printStackTrace()              // print full stack trace to logs
+            call.respond(HttpStatusCode.InternalServerError,
+                mapOf("reply" to "Error: Could not connect to server."))
         }
         //call.respondText("""{"reply":"$zephyrReply"}""", ContentType.Application.Json)
     }
